@@ -1,52 +1,60 @@
-ZendSkeletonApplication
-=======================
+# Video Hoster Module
 
-Introduction
-------------
-This is a simple, skeleton application using the ZF2 MVC layer and module
-systems. This application is meant to be used as a starting place for those
-looking to get their feet wet with ZF2.
+## Introduction
 
-Installation
-------------
+### Video Hosting Platform
 
-Using Composer (recommended)
-----------------------------
-The recommended way to get a working copy of this project is to clone the repository
-and use `composer` to install dependencies using the `create-project` command:
+### Description
 
-    curl -s https://getcomposer.org/installer | php --
-    php composer.phar create-project -sdev --repository-url="https://packages.zendframework.com" zendframework/skeleton-application path/to/install
+I've been thinking lately of creating an app/site for hosting videos, like laracasts et al. However if there's already an open source one available there's no point in creating another. So, does anyone know of one?
 
-Alternately, clone the repository and manually invoke `composer` using the shipped
-`composer.phar`:
+I think it'd be a blog basically with extra features for handling purchases and subscriptions. I figure I should write it in ZF2 as that's what my videos are about. But maybe I should use Laravel instead.
 
-    cd my/project/dir
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git
-    cd ZendSkeletonApplication
-    php composer.phar self-update
-    php composer.phar install
+### Features
 
-(The `self-update` directive is to ensure you have an up-to-date `composer.phar`
-available.)
+- Standard blog features (name, description, categories, duration, download, publish date, description, meta tags, extract, payment requirement (free/paid) etc, level/complexity, series/standalone)
+- Comments handled by Disqus
+- Supports markdown format
+- Handles purchases and payments (like [Laravel Cashier](https://github.com/laravel/cashier))
+- Supports simple static pages
+- Social media plugins
+- RSS feed
+- robots.txt
+- sitemap.xml
 
-Another alternative for downloading the project is to grab it via `curl`, and
-then pass it to `tar`:
+### Pages/Schema/Sitemap
 
-    cd my/project/dir
-    curl -#L https://github.com/zendframework/ZendSkeletonApplication/tarball/master | tar xz --strip-components=1
+- home
+- FAQ
+- testimonials
+- about
+- RSS
+- customer support
 
-You would then invoke `composer` to install dependencies per the previous
-example.
+### Research
 
-Using Git submodules
---------------------
-Alternatively, you can install using native git submodules:
+- [Markdown package](https://github.com/maglnet/MaglMarkdown)
+- Users (based off of ZfcUser/ZfcBase)
+- Email ([SlmMail](https://github.com/juriansluiman/SlmMail) using [Mandrill](https://www.mandrill.com/))
+- Analytics ([SlmGoogleAnalytics](https://github.com/juriansluiman/SlmGoogleAnalytics))
+- Static Assets ([Assetic](https://github.com/kriswallsmith/assetic))
 
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git --recursive
+### To Find
 
-Web Server Setup
-----------------
+- Payments module (may need to write one or port [Laravel Cashier](https://github.com/laravel/cashier))
+- Video integration (I'm thinking of something that makes it easy to embed videos, but start with Wistia specifically)
+
+## Deployment
+
+
+## Installation
+
+
+### Using Composer (recommended)
+
+
+## Web Server Setup
+
 
 ### PHP CLI Server
 
