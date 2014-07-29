@@ -52,6 +52,18 @@ return array(
                             ),
                         ),
                     ),
+                    'view-video' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:episode-name',
+                            'constraints' => array(
+                                'skill-level' => '[a-zA-Z][a-zA-Z-]*[a-zA-Z]'
+                            ),
+                            'defaults' => array(
+                                'action'     => 'ViewVideo',
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),

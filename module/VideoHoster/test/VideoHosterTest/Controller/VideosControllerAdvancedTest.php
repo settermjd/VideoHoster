@@ -17,6 +17,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
+use Faker;
 
 class VideosControllerAdvancedTest extends AbstractHttpControllerTestCase
 {
@@ -39,14 +40,13 @@ class VideosControllerAdvancedTest extends AbstractHttpControllerTestCase
 
     public function validCategoryProvider()
     {
-        return array(
-            array('security'),
-            array('service-manager'),
-            array('forms'),
-            array('module-manager'),
-            array('input_filter'),
-            array('input__filter')
-        );
+        $data = array();
+        $faker = Faker\Factory::create();
+        foreach(range(1, 100) as $count) {
+            $data[] = array($faker->slug());
+        }
+
+        return $data;
     }
 
     /**
@@ -103,5 +103,25 @@ class VideosControllerAdvancedTest extends AbstractHttpControllerTestCase
             array('legend'),
             array('l33th@x0r'),
         );
+    }
+
+    /**
+     * @dataProvider validVideoPagesProvider
+     */
+    public function testCanDispatchToValidVideoPages($validPages)
+    {
+        $this->dispatch('/' . $validPages);
+        $this->assertResponseStatusCode(404);
+    }
+
+    public function validVideoPagesProvider()
+    {
+        $data = array();
+        $faker = Faker\Factory::create();
+        foreach(range(1, 100) as $count) {
+            $data[] = array($faker->slug());
+        }
+
+        return $data;
     }
 } 
