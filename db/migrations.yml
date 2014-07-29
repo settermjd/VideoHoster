@@ -1,0 +1,5 @@
+---
+name: Video Hoster Migrations
+migrations_namespace: VideoHosterMigrations
+table_name: migration_version
+migrations_directory: ./migrations
