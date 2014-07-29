@@ -23,6 +23,11 @@ class VideosController extends AbstractActionController
         return new ViewModel();
     }
 
+    public function ViewVideoAction()
+    {
+        return new ViewModel();
+    }
+
 
 }
 
