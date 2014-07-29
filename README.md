@@ -83,3 +83,17 @@ project and you should be ready to go! It should look something like below:
             Allow from all
         </Directory>
     </VirtualHost>
+
+
+## User Accounts
+
+The application uses ZfcUser, which uses Bcrypt to create passwords, with a cost of 14. To create a password manually, use the following snippet:
+
+```
+<?php 
+print password_hash(
+	'your/password', 
+	PASSWORD_BCRYPT, 
+	array('cost' => 14)
+);
+```
