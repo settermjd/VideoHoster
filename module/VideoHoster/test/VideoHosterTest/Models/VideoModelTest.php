@@ -26,6 +26,7 @@ class VideoModelTest extends ModelTestAbstract
             'publishDate'  => 61,
             'publishTime'  => 61,
             'levelId'  => 61,
+            'paymentRequirementId' => 1,
             'slug'  => "zend-framework-security",
         );
     }
