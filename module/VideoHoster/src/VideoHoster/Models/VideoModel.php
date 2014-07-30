@@ -6,6 +6,7 @@ class VideoModel
 {
     public $videoId;
     public $name;
+    public $slug;
     public $authorId;
     public $statusId;
     public $description;
@@ -19,6 +20,7 @@ class VideoModel
     {
         $this->videoId = (isset($data['videoId'])) ? $data['videoId'] : null;
         $this->name = (isset($data['name'])) ? $data['name'] : null;
+        $this->slug = (isset($data['slug'])) ? $data['slug'] : null;
         $this->extract = (isset($data['extract'])) ? $data['extract'] : null;
         $this->duration = (isset($data['duration'])) ? $data['duration'] : null;
         $this->authorId = (isset($data['authorId'])) ? $data['authorId'] : null;
