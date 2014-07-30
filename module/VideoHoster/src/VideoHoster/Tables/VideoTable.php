@@ -3,6 +3,7 @@
 namespace VideoHoster\Tables;
 
 use VideoHoster\Models\VideoModel;
+use Zend\Stdlib\Exception\InvalidArgumentException;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Where as WherePredicate;
 
@@ -17,6 +18,12 @@ class VideoTable
         $this->tableGateway = $tableGateway;
     }
 
+    /**
+     * Fetches a single video record based on the supplied slug
+     *
+     * @param string $videoSlug
+     * @return bool
+     */
     public function fetchBySlug($videoSlug)
     {
         if (!empty($videoSlug)) {
@@ -24,12 +31,11 @@ class VideoTable
             $select->where(array("slug" => $videoSlug));
             $results = $this->tableGateway->selectWith($select);
 
-            if ($results->count() == 1) {
-                return $results->current();
-            }
+            return ($results->count() == 1) ? $results->current() : false;
         }
 
-        return false;
+        throw new InvalidArgumentException('invalid slug supplied');
+    }
 
     /**
      * Return all active videos in reverse order of published date
