@@ -30,5 +30,20 @@ class VideoTable
         }
 
         return false;
+
+    /**
+     * Return all active videos in reverse order of published date
+     *
+     * @return bool|\Zend\Db\ResultSet\ResultSetInterface
+     */
+    public function fetchActiveVideos()
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->join('tblstatus', 'tblstatus.statusId = tblvideo.statusId', array())
+               ->where(array('tblstatus.name' => 'active'))
+               ->order('publishDate DESC');
+        $results = $this->tableGateway->selectWith($select);
+
+        return ($results->count()) ? $results : false;
     }
 } 
