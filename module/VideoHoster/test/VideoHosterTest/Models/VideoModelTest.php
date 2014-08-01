@@ -17,7 +17,7 @@ class VideoModelTest extends ModelTestAbstract
         $this->model = new VideoModel();
         $this->testData = array(
             'videoId' => 1,
-            'name'  => 1,
+            'name'  => "zend framework security",
             'authorId'  => "1 Queen St",
             'statusId'  => "",
             'description'  => "Brisbane",
@@ -26,6 +26,8 @@ class VideoModelTest extends ModelTestAbstract
             'publishDate'  => 61,
             'publishTime'  => 61,
             'levelId'  => 61,
+            'paymentRequirementId' => 1,
+            'slug'  => "zend-framework-security",
         );
     }
 } 
