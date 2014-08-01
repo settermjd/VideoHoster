@@ -18,4 +18,14 @@ class Module
             ),
         );
     }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'abstract_factories' => array(
+                'VideoHoster\ServiceManager\AbstractFactory\TableAbstractFactory',
+                'VideoHoster\ServiceManager\AbstractFactory\TableGatewayAbstractFactory'
+            )
+        );
+    }
 }
