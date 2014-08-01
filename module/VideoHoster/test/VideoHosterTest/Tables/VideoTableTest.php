@@ -19,8 +19,18 @@ class VideoTableTest extends PHPUnit_Framework_TestCase
     protected $traceError = true;
 
     protected $_recordData =  array(
-        'statusId'  => 1,
-        'status'  => "Active"
+        'videoId' => 1,
+        'name'  => "zend framework security",
+        'authorId'  => "1 Queen St",
+        'statusId'  => "",
+        'description'  => "Brisbane",
+        'extract'  => "Qld",
+        'duration'  => "4000",
+        'publishDate'  => 61,
+        'publishTime'  => 61,
+        'levelId'  => 61,
+        'paymentRequirementId' => 1,
+        'slug'  => "zend-framework-security",
     );
 
     public function tearDown()
@@ -97,48 +107,48 @@ class VideoTableTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($resultSet, $mockVideoTable->fetchActiveVideos());
     }
-
-    /*
+    
     public function testSaveWillInsertNewIfTheyDoNotAlreadyHaveAnId()
     {
-        $status = new VideoModel();
+        $video = new VideoModel();
         $recordData = $this->_recordData;
-        unset($recordData['statusId']);
-        $status->exchangeArray($recordData);
+        unset($recordData['videoId']);
+        $video->exchangeArray($recordData);
 
-        $mockTableGateway = $this->getMock(
-            'Zend\Db\TableGateway\TableGateway', array('insert'), array(), '', false
-        );
-        $mockTableGateway->expects($this->once())
-            ->method('insert')
-            ->with(array(
-                'status'  => "Active",
-            ));
+        $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
+        $mockTableGateway->shouldReceive('insert')
+            ->times(1)
+            ->with($recordData)
+            ->andReturn(true);
+
+        $mockTableGateway->shouldReceive('getLastInsertValue')
+            ->times(1)
+            ->with()
+            ->andReturn(1);
 
         $VideoTable = new VideoTable($mockTableGateway);
-        $VideoTable->save($status);
+        $VideoTable->save($video);
     }
 
     public function testSaveWillUpdateExistingIfTheyAlreadyHaveAnId()
     {
         $recordData = $this->_recordData;
-        $statusId = $recordData['statusId'];
-        unset($recordData['statusId']);
-        $status = new VideoModel();
-        $status->exchangeArray($this->_recordData);
+        $videoId = $recordData['videoId'];
+        unset($recordData['videoId']);
+        $video = new VideoModel();
+        $video->exchangeArray($this->_recordData);
 
         $resultSet = new ResultSet();
         $resultSet->setArrayObjectPrototype(new VideoModel());
-        $resultSet->initialize(array($status));
+        $resultSet->initialize(array($video));
 
         $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
-        $mockTableGateway->shouldReceive('update')->with(array(
-            'status'  => "Active",
-        ), array('statusId' => $statusId))->andReturn($this->_recordData);
+        $mockTableGateway->shouldReceive('update')
+            ->with($recordData, array('videoId' => $videoId))
+            ->andReturn($this->_recordData);
 
         $VideoTable = new VideoTable($mockTableGateway);
-        $VideoTable->save($status, $statusId);
+        $VideoTable->save($video, $videoId);
     }
-    */
 }
  

@@ -52,4 +52,31 @@ class VideoTable
 
         return ($results->count()) ? $results : false;
     }
+
+    /**
+     * Create a new or update an existing record
+     *
+     * @param VideoModel $video
+     * @return int
+     */
+    public function save(VideoModel $video)
+    {
+        $data = $video->getArrayCopy();
+        unset($data['videoId']);
+
+        if ((int)$video->videoId == 0) {
+            if ($this->tableGateway->insert($data)) {
+                return $this->tableGateway->getLastInsertValue();
+            }
+        } else {
+            $retstat = $this->tableGateway->update(
+                $data, array('videoId' => (int)$video->videoId)
+            );
+            if ($retstat) {
+                return $retstat;
+            }
+        }
+
+        return false;
+    }
 } 
