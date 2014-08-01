@@ -72,8 +72,10 @@ return array(
         'invokables' => array(
             'VideoHoster\Controller\BusinessPages' =>
                 'VideoHoster\Controller\BusinessPagesController',
-            'VideoHoster\Controller\Videos' => 'VideoHoster\Controller\VideosController'
         ),
+        'abstract_factories' => array(
+            'VideoHoster\ServiceManager\AbstractFactory\ControllerAbstractFactory',
+        )
     ),
     'view_manager' => array(
         'template_path_stack' => array(
