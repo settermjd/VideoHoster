@@ -3,9 +3,9 @@
 namespace VideoHoster\Tables;
 
 use VideoHoster\Models\VideoModel;
-use Zend\Stdlib\Exception\InvalidArgumentException;
-use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Where as WherePredicate;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Stdlib\Exception\InvalidArgumentException;
 
 class VideoTable
 {
@@ -45,9 +45,13 @@ class VideoTable
     public function fetchActiveVideos()
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->join('tblstatus', 'tblstatus.statusId = tblvideo.statusId', array())
-               ->where(array('tblstatus.name' => 'active'))
-               ->order('publishDate DESC');
+        $select->join(
+            'tblstatus',
+            'tblstatus.statusId = tblvideo.statusId',
+            array())
+            ->where(array('tblstatus.name' => 'active'))
+            ->order('publishDate DESC');
+
         $results = $this->tableGateway->selectWith($select);
 
         return ($results->count()) ? $results : false;
@@ -79,4 +83,4 @@ class VideoTable
 
         return false;
     }
-} 
+}

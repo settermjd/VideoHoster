@@ -28,7 +28,9 @@ class VideosControllerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $serviceManager = Bootstrap::getServiceManager();
-        $this->controller = new VideosController();
+        $this->controller = new VideosController($serviceManager->get(
+            'VideoHoster\Tables\VideoTable'
+        ));
         $this->request    = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));
         $this->event      = new MvcEvent();

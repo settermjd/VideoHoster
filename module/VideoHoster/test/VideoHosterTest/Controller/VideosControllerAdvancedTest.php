@@ -11,6 +11,7 @@ namespace VideoHosterTest\Controller;
 use VideoHosterTest\Bootstrap;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use VideoHoster\Controller\VideosController;
+use VideoHoster\Tables\VideoTable;
 use Zend\Server\Method\Parameter;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Zend\Http\Request;
@@ -27,6 +28,14 @@ class VideosControllerAdvancedTest extends AbstractHttpControllerTestCase
             include __DIR__ . '/../../../../../config/application.config.php'
         );
         parent::setUp();
+
+        $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', new VideoTable($mockTableGateway)
+        );
     }
 
     /**
