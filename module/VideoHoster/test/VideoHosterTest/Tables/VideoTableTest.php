@@ -107,6 +107,48 @@ class VideoTableTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($resultSet, $mockVideoTable->fetchActiveVideos());
     }
+
+    public function testFetchAllActiveVideosReturnsAnEmptyResultsetWhenNoRecordsAvailable()
+    {
+        $resultSet = new ResultSet();
+        $record = new VideoModel();
+        $record->exchangeArray($this->_recordData);
+        $resultSet->initialize(array($record));
+
+        // create the sql object
+        $mockSql = \Mockery::mock('Zend\Db\Sql\Select');
+        $mockSql->shouldReceive('select')->andReturn($mockSql);
+
+        // mock the where clause
+        $mockSql->shouldReceive('where')
+            ->with(array('tblstatus.name' => 'active'))
+            ->times(1)
+            ->andReturn($mockSql);
+
+        // mock the join on the status table
+        $mockSql->shouldReceive('join')
+            ->with('tblstatus', 'tblstatus.statusId = tblvideo.statusId', array())
+            ->times(1)
+            ->andReturn($mockSql);
+
+        // mock the order by clause
+        $mockSql->shouldReceive('order')
+            ->with('publishDate DESC')
+            ->times(1)
+            ->andReturn($mockSql);
+
+        // get the sql object
+        $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
+        $mockTableGateway->shouldReceive('getSql')->andReturn($mockSql);
+        $mockTableGateway->shouldReceive('selectWith')
+            ->times(1)
+            ->with($mockSql)
+            ->andReturn($resultSet);
+
+        $mockVideoTable = new VideoTable($mockTableGateway);
+
+        $this->assertEquals($resultSet, $mockVideoTable->fetchActiveVideos());
+    }
     
     public function testSaveWillInsertNewIfTheyDoNotAlreadyHaveAnId()
     {
