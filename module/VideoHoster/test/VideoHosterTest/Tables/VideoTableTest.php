@@ -111,9 +111,7 @@ class VideoTableTest extends PHPUnit_Framework_TestCase
     public function testFetchAllActiveVideosReturnsAnEmptyResultsetWhenNoRecordsAvailable()
     {
         $resultSet = new ResultSet();
-        $record = new VideoModel();
-        $record->exchangeArray($this->_recordData);
-        $resultSet->initialize(array($record));
+        $resultSet->initialize(array());
 
         // create the sql object
         $mockSql = \Mockery::mock('Zend\Db\Sql\Select');
