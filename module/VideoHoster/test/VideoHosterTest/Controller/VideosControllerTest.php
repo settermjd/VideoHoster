@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: mattsetter
  * Date: 28/07/14
- * Time: 21:02
+ * Time: 21:09
  */
 
 namespace VideoHosterTest\Controller;
@@ -11,47 +11,197 @@ namespace VideoHosterTest\Controller;
 use VideoHosterTest\Bootstrap;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use VideoHoster\Controller\VideosController;
+use VideoHoster\Tables\VideoTable;
+use VideoHoster\Models\VideoModel;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Server\Method\Parameter;
+use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
-use PHPUnit_Framework_TestCase;
+use Faker;
 
-class VideosControllerTest extends \PHPUnit_Framework_TestCase
+class VideosControllerTest extends AbstractHttpControllerTestCase
 {
-    protected $controller;
-    protected $request;
-    protected $response;
-    protected $routeMatch;
-    protected $event;
-
-    protected function setUp()
+    public function setUp()
     {
-        $serviceManager = Bootstrap::getServiceManager();
-        $this->controller = new VideosController($serviceManager->get(
-            'VideoHoster\Tables\VideoTable'
+        $this->setApplicationConfig(
+            include __DIR__ . '/../../../../../config/application.config.php'
+        );
+        parent::setUp();
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+    }
+
+    public function testCanDispatchToTutorialsIndexPageWithoutResults()
+    {
+        $resultSet = new ResultSet();
+        $resultSet->initialize(array());
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('fetchActiveVideos')
+            ->once()
+            ->andReturn($resultSet);
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->dispatch('/tutorials');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryCount(
+            '//div[@class="col-lg-12"][starts-with(normalize-space(.), "Sorry, no tutorials are currently available")]/text()', 1
+        );
+        $this->assertXpathQueryCount('//h1[contains(text(), "All Tutorials")]', 1);
+    }
+
+    public function testCanDispatchToTutorialsIndexPageWithResults()
+    {
+        $resultSet = new ResultSet();
+        $video = new VideoModel();
+        $video->exchangeArray(array(
+            'videoId' => 12,
+            'name' => "Freddie Mercury Live",
+            'slug' => "freddie-mercury-live",
+            'description' => "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+            'authorId' => 1,
+            'statusId' => 1,
+            'paymentRequirementId' => 1,
+            'extract' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+            'duration' => 115,
+            'publishDate' => '2008-08-01',
+            'publishTime' => '11:15',
+            'levelId' => 1
         ));
-        $this->request    = new Request();
-        $this->routeMatch = new RouteMatch(array('controller' => 'index'));
-        $this->event      = new MvcEvent();
-        $config = $serviceManager->get('Config');
-        $routerConfig = isset($config['router']) ? $config['router'] : array();
-        $router = HttpRouter::factory($routerConfig);
 
-        $this->event->setRouter($router);
-        $this->event->setRouteMatch($this->routeMatch);
-        $this->controller->setEvent($this->event);
-        $this->controller->setServiceLocator($serviceManager);
+        $resultVideos = array($video);
+
+        $resultSet->initialize($resultVideos);
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('fetchActiveVideos')
+            ->once()
+            ->andReturn($resultSet);
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->dispatch('/tutorials');
+
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryCount('//h1[contains(text(), "All Tutorials")]', 1);
+
+        foreach ($resultVideos as $result) {
+            $this->assertXpathQueryCount("//h2[contains(text(), '{$result->name}')]", 1);
+            $this->assertXpathQueryCount("//p[contains(text(), \"{$result->description}\")]", 1);
+        }
     }
 
-    public function testIndexActionCanBeAccessed()
+    /**
+     * @dataProvider validCategoryProvider
+     */
+    public function testCanDispatchToValidCategoryPages($validCategory)
     {
-        $this->routeMatch->setParam('action', 'index');
-
-        $result   = $this->controller->dispatch($this->request);
-        $response = $this->controller->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->dispatch('/tutorials/category/' . $validCategory);
+        $this->assertResponseStatusCode(200);
     }
 
+    public function validCategoryProvider()
+    {
+        $data = array();
+        $faker = Faker\Factory::create();
+        foreach(range(1, 100) as $count) {
+            $data[] = array($faker->slug());
+        }
+
+        return $data;
+    }
+
+    /**
+     * @dataProvider invalidCategoryProvider
+     */
+    public function testCannotDispatchToInvalidCategoryPages($validCategory)
+    {
+        $this->dispatch('/tutorials/category/' . $validCategory);
+        $this->assertResponseStatusCode(404);
+    }
+
+    public function invalidCategoryProvider()
+    {
+        return array(
+            array('security01'),
+            array('service+manager'),
+            array('21forms'),
+            array('module-manager£@!'),
+            array('input_filter.,/?><')
+        );
+    }
+
+    /**
+     * @dataProvider validSkillLevelProvider
+     */
+    public function testCanDispatchToValidSkillLevelPages($validSkill)
+    {
+        $this->dispatch('/tutorials/skill/' . $validSkill);
+        $this->assertResponseStatusCode(200);
+    }
+
+    public function validSkillLevelProvider()
+    {
+        return array(
+            array('beginner'),
+            array('intermediate'),
+            array('advanced'),
+        );
+    }
+
+    /**
+     * @dataProvider invalidSkillLevelProvider
+     */
+    public function testCannotDispatchToInvalidSkillLevelPages($validSkill)
+    {
+        $this->dispatch('/tutorials/skill/' . $validSkill);
+        $this->assertResponseStatusCode(404);
+    }
+
+    public function invalidSkillLevelProvider()
+    {
+        return array(
+            array('starting'),
+            array('legend'),
+            array('l33th@x0r'),
+        );
+    }
+
+    /**
+     * @dataProvider validVideoPagesProvider
+     */
+    public function testCanDispatchToValidVideoPages($validPages)
+    {
+        $this->dispatch('/' . $validPages);
+        $this->assertResponseStatusCode(404);
+    }
+
+    public function validVideoPagesProvider()
+    {
+        $data = array();
+        $faker = Faker\Factory::create();
+        foreach(range(1, 100) as $count) {
+            $data[] = array($faker->slug());
+        }
+
+        return $data;
+    }
 } 

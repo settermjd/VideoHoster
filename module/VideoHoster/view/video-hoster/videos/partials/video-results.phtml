@@ -1,0 +1,12 @@
+<?php if ($this->partialLoop()->getPartialCounter() % 3 == 1): ?>
+<div class="row">
+<?php endif; ?>
+    <div class="col-lg-4">
+        <h2><?php print $this->name; ?></h2>
+        <p class="text-danger"><?php print $this->description; ?></p>
+        <p><a class="btn btn-primary" href="#" role="button"
+                ><?php print $this->translate('View tutorial'); ?> »</a></p>
+    </div>
+<?php if ($this->partialLoop()->getPartialCounter() % 3 == 0): ?>
+</div>
+<?php endif; ?>
