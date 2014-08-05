@@ -3,6 +3,7 @@
 namespace VideoHoster\Tables;
 
 use VideoHoster\Models\VideoModel;
+use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\Where as WherePredicate;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Stdlib\Exception\InvalidArgumentException;
@@ -54,7 +55,12 @@ class VideoTable
 
         $results = $this->tableGateway->selectWith($select);
 
-        return ($results->count()) ? $results : false;
+        if (!$results->count() || is_null($results)) {
+            $results = new ResultSet();
+            $results->initialize(array());
+        }
+
+        return $results;
     }
 
     /**

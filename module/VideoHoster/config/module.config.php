@@ -81,5 +81,8 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+        'template_map' => array(
+            'video-results' => __DIR__ . '/../view/video-hoster/videos/partials/video-results.phtml',
+        )
     ),
 );
