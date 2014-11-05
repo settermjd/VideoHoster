@@ -28,6 +28,16 @@ class BusinessPagesController extends AbstractActionController
         return new ViewModel();
     }
 
+    /**
+     * Display the impressum page, required under German law
+     * 
+     * @return ViewModel
+     */
+    public function ImpressumAction()
+    {
+        return new ViewModel();
+    }
+
     public function SupportAction()
     {
         return new ViewModel();

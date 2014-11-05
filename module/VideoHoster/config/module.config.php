@@ -8,7 +8,8 @@ return array(
                     'route'    => '[/pages[/:action]]',
                     'constraints' => array(
                         'action'     =>
-                            'about|faq|testimonials|support|privacy|copyright|disclaimer|terms',
+                            'about|faq|testimonials|support|privacy|copyright|disclaimer|terms
+                            |impressum',
                     ),
                     'defaults' => array(
                         '__NAMESPACE__' => 'VideoHoster\Controller',
