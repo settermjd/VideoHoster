@@ -42,7 +42,20 @@ class ControllerAbstractFactory implements AbstractFactoryInterface
 
         if (fnmatch('*Videos', $requestedName)) {
             $sm = $serviceLocator->getServiceLocator();
-            $controller = new $controllerName($sm->get('VideoHoster\Tables\VideoTable'));
+            $cache = array();
+
+            if ($sm->has('Cache\Persistence')) {
+                $cache['Cache\Persistence'] = $sm->get('Cache\Persistence');
+            }
+
+            if ($sm->has('Cache\Transient')) {
+                $cache['Cache\Transient'] = $sm->get('Cache\Transient');
+            }
+
+            $controller = new $controllerName(
+                $sm->get('VideoHoster\Tables\VideoTable'),
+                $cache
+            );
         }
 
         return $controller;
