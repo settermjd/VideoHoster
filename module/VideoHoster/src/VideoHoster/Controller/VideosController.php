@@ -17,15 +17,26 @@ class VideosController extends AbstractActionController
     protected $videoTable;
 
     /**
+     * Cache object
+     *
+     * @var null
+     */
+    protected $cache;
+
+    /**
      *  Basic class constructor
      *
      * @param \VideoHoster\Tables\VideoTable $videoTable
      * @access public
      * @return void
      */
-    public function __construct(VideoTable $videoTable)
+    public function __construct(VideoTable $videoTable, $cache = null)
     {
         $this->videoTable = $videoTable;
+
+        if (!is_null($cache)) {
+            $this->cache = $cache;
+        }
     }
 
     public function indexAction()
