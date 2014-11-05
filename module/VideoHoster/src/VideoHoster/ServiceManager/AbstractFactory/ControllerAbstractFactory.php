@@ -51,6 +51,11 @@ class ControllerAbstractFactory implements AbstractFactoryInterface
             if ($sm->has('Cache\Transient')) {
                 $cache['Cache\Transient'] = $sm->get('Cache\Transient');
             }
+
+            $controller = new $controllerName(
+                $sm->get('VideoHoster\Tables\VideoTable'),
+                $cache
+            );
         }
 
         return $controller;

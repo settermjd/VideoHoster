@@ -41,9 +41,11 @@ class VideosController extends AbstractActionController
 
     public function indexAction()
     {
-        return new ViewModel(array(
-            'tutorials' => $this->videoTable->fetchActiveVideos()
-        ));
+        return new ViewModel(
+            array(
+                'tutorials' => $this->videoTable->fetchActiveVideos()
+            )
+        );
     }
 
     public function ByCategoryAction()
