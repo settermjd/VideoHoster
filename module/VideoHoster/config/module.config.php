@@ -17,10 +17,10 @@ return array(
                     ),
                 ),
             ),
-            'tutorials' => array(
+            'videos' => array(
                 'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/tutorials',
+                    'route'    => '/videos',
                     'defaults' => array(
                         '__NAMESPACE__' => 'VideoHoster\Controller',
                         'controller'    => 'Videos',
