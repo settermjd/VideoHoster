@@ -43,15 +43,20 @@ class VideoTable
      *
      * @return bool|\Zend\Db\ResultSet\ResultSetInterface
      */
-    public function fetchActiveVideos()
+    public function fetchActiveVideos($resultLimit = null)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->join(
             'tblstatus',
             'tblstatus.statusId = tblvideo.statusId',
-            array())
+            array()
+        )
             ->where(array('tblstatus.name' => 'active'))
             ->order('publishDate DESC');
+
+        if (!is_null($resultLimit)) {
+            $select->limit((int)$resultLimit);
+        }
 
         $results = $this->tableGateway->selectWith($select);
 
