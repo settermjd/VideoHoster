@@ -40,7 +40,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         );
     }
 
-    public function testCanDispatchToTutorialsIndexPageWithoutResults()
+    public function testCanDispatchToVideoIndexPageWithoutResults()
     {
         $resultSet = new ResultSet();
         $resultSet->initialize(array());
@@ -56,7 +56,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
             'VideoHoster\Tables\VideoTable', $mockTable
         );
 
-        $this->dispatch('/tutorials');
+        $this->dispatch('/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount(
             '//div[@class="col-lg-12"][starts-with(normalize-space(.), "Sorry, no tutorials are currently available")]/text()', 1
@@ -64,7 +64,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $this->assertXpathQueryCount('//h1[contains(text(), "All Tutorials")]', 1);
     }
 
-    public function testCanDispatchToTutorialsIndexPageWithResults()
+    public function testCanDispatchToVideoIndexPageWithResults()
     {
         $resultSet = new ResultSet();
         $video = new VideoModel();
@@ -98,7 +98,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
             'VideoHoster\Tables\VideoTable', $mockTable
         );
 
-        $this->dispatch('/tutorials');
+        $this->dispatch('/');
 
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//h1[contains(text(), "All Tutorials")]', 1);
