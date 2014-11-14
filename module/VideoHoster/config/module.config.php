@@ -29,30 +29,6 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-                    'by-category' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/category/:category',
-                            'constraints' => array(
-                                'category' => '[a-zA-Z][a-zA-Z_-]*[a-zA-Z]'
-                            ),
-                            'defaults' => array(
-                                'action'     => 'ByCategory',
-                            ),
-                        ),
-                    ),
-                    'by-skill-level' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/skill/:skill-level',
-                            'constraints' => array(
-                                'skill-level' => 'beginner|intermediate|advanced'
-                            ),
-                            'defaults' => array(
-                                'action'     => 'BySkillLevel',
-                            ),
-                        ),
-                    ),
                     'view-video' => array(
                         'type'    => 'Segment',
                         'options' => array(

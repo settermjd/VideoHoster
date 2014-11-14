@@ -110,64 +110,6 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
-     * @dataProvider validCategoryProvider
-     */
-    public function testCanDispatchToValidCategoryPages($validCategory)
-    {
-        $this->dispatch('/tutorials/category/' . $validCategory);
-        $this->assertResponseStatusCode(200);
-    }
-
-    public function validCategoryProvider()
-    {
-        $data = array();
-        $faker = Faker\Factory::create();
-        foreach(range(1, 100) as $count) {
-            $data[] = array($faker->slug());
-        }
-
-        return $data;
-    }
-
-    /**
-     * @dataProvider invalidCategoryProvider
-     */
-    public function testCannotDispatchToInvalidCategoryPages($validCategory)
-    {
-        $this->dispatch('/tutorials/category/' . $validCategory);
-        $this->assertResponseStatusCode(404);
-    }
-
-    public function invalidCategoryProvider()
-    {
-        return array(
-            array('security01'),
-            array('service+manager'),
-            array('21forms'),
-            array('module-manager£@!'),
-            array('input_filter.,/?><')
-        );
-    }
-
-    /**
-     * @dataProvider validSkillLevelProvider
-     */
-    public function testCanDispatchToValidSkillLevelPages($validSkill)
-    {
-        $this->dispatch('/tutorials/skill/' . $validSkill);
-        $this->assertResponseStatusCode(200);
-    }
-
-    public function validSkillLevelProvider()
-    {
-        return array(
-            array('beginner'),
-            array('intermediate'),
-            array('advanced'),
-        );
-    }
-
-    /**
      * @dataProvider invalidSkillLevelProvider
      */
     public function testCannotDispatchToInvalidSkillLevelPages($validSkill)
@@ -204,4 +146,4 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
 
         return $data;
     }
-} 
+}
