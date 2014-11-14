@@ -20,7 +20,7 @@ return array(
             'videos' => array(
                 'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/videos',
+                    'route'    => '/',
                     'defaults' => array(
                         '__NAMESPACE__' => 'VideoHoster\Controller',
                         'controller'    => 'Videos',
