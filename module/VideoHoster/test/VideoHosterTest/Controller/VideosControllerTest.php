@@ -110,24 +110,6 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
-     * @dataProvider invalidSkillLevelProvider
-     */
-    public function testCannotDispatchToInvalidSkillLevelPages($validSkill)
-    {
-        $this->dispatch('/tutorials/skill/' . $validSkill);
-        $this->assertResponseStatusCode(404);
-    }
-
-    public function invalidSkillLevelProvider()
-    {
-        return array(
-            array('starting'),
-            array('legend'),
-            array('l33th@x0r'),
-        );
-    }
-
-    /**
      * @dataProvider validVideoPagesProvider
      */
     public function testCanDispatchToValidVideoPages($validPages)
