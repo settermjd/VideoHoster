@@ -9,7 +9,7 @@
 return array(
     'driver'    => 'pdo_pgsql',
     'host'      => 'localhost',
-    'port'      => '5432',
+    'port'      => '54320',
     'user'      => 'homestead',
     'password'  => 'secret',
     'dbname'    => 'homestead'
