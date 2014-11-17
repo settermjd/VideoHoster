@@ -56,7 +56,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
             'VideoHoster\Tables\VideoTable', $mockTable
         );
 
-        $this->dispatch('/');
+        $this->dispatch('/videos');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount(
             '//div[@class="col-lg-12"][starts-with(normalize-space(.), "Sorry, no tutorials are currently available")]/text()', 1
@@ -98,7 +98,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
             'VideoHoster\Tables\VideoTable', $mockTable
         );
 
-        $this->dispatch('/');
+        $this->dispatch('/videos');
 
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//h1[contains(text(), "All Tutorials")]', 1);
