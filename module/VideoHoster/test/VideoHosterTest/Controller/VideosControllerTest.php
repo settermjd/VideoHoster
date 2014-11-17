@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mattsetter
- * Date: 28/07/14
- * Time: 21:09
- */
-
 namespace VideoHosterTest\Controller;
 
 use VideoHosterTest\Bootstrap;
