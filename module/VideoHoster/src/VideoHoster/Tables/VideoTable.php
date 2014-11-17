@@ -4,7 +4,6 @@ namespace VideoHoster\Tables;
 
 use VideoHoster\Models\VideoModel;
 use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\Sql\Where as WherePredicate;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Stdlib\Exception\InvalidArgumentException;
 
@@ -23,7 +22,8 @@ class VideoTable
      * Fetches a single video record based on the supplied slug
      *
      * @param string $videoSlug
-     * @return bool
+     * @throws InvalidArgumentException
+     * @return VideoModel|null
      */
     public function fetchBySlug($videoSlug)
     {

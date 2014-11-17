@@ -20,7 +20,7 @@ return array(
             'videos' => array(
                 'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/',
+                    'route'    => '/videos',
                     'defaults' => array(
                         '__NAMESPACE__' => 'VideoHoster\Controller',
                         'controller'    => 'Videos',
@@ -32,9 +32,9 @@ return array(
                     'view-video' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/:episode-name',
+                            'route'    => '/:slug',
                             'constraints' => array(
-                                'skill-level' => '[a-zA-Z][a-zA-Z-]*[a-zA-Z]'
+                                'slug' => '[a-zA-Z][a-zA-Z-]*[a-zA-Z]'
                             ),
                             'defaults' => array(
                                 'action'     => 'ViewVideo',
