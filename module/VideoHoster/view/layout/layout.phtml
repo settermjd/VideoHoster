@@ -34,11 +34,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
+                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"
+                        ><?php echo $this->translate('ZFCasts') ?></a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
+                        <li><a href="<?php echo $this->url('business-pages', array('action' => 'about')) ?>"
+                            ><?php echo $this->translate('About') ?></a></li>
+                        <li><a href="<?php echo $this->url('business-pages', array('action' => 'faq')) ?>"
+                            ><?php echo $this->translate('FAQ') ?></a></li>
                         <!-- Test if the User is connected -->
                         <?php if(!$this->zfcUserIdentity()): ?>
                         <!-- display the login form -->
@@ -56,7 +61,13 @@
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+                <p>&copy; 2005 - <?php echo date('Y') ?> by ZFCasts.<?php echo $this->translate('All rights reserved.') ?>
+                <a href="<?php echo $this->url('business-pages', array('action' => 'disclaimer')) ?>"
+                    ><?php echo $this->translate('Disclaimer') ?></a>
+                <a href="<?php echo $this->url('business-pages', array('action' => 'privacy')) ?>"
+                    ><?php echo $this->translate('Privacy') ?></a>
+                <a href="<?php echo $this->url('business-pages', array('action' => 'impressum')) ?>"
+                    ><?php echo $this->translate('Impressum') ?></a> </p>
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>
