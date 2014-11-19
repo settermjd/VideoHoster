@@ -36,7 +36,6 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
     protected function checkPageHeader()
     {
         $this->assertXpathQueryCount('//a[@class="navbar-brand"][contains(text(), "ZFCasts")]', 1);
-        $this->assertXpathQueryCount('//a[contains(text(), "About")]', 1);
         $this->assertXpathQueryCount('//a[contains(text(), "FAQ")]', 1);
         $this->assertXpathQueryCount('//a[contains(text(), "Impressum")]', 1);
         $this->assertXpathQueryCount('//a[contains(text(), "Disclaimer")]', 1);
