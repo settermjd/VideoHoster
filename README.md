@@ -44,14 +44,22 @@ I think it'd be a blog basically with extra features for handling purchases and 
 - Payments module (may need to write one or port [Laravel Cashier](https://github.com/laravel/cashier))
 - Video integration (I'm thinking of something that makes it easy to embed videos, but start with Wistia specifically)
 
-## Deployment
+## Deployment & Installation
 
+At this stage, there's not much to deploying and installing the project. So 
+long as you have a PostgreSQL database available, then add your settings to 
+global.config.php and the credentials to local.config.php and you're pretty
+much ready to go. The application's been developed using PHP's built-in web
+server. But naturally, don't use this in production. However it's great to
+test out the app. I'll have a sample VHost for Apache 2 and Nginx in an 
+upcoming release.
 
-## Installation
+### Via Git Clone (recommended)
 
-
-### Using Composer (recommended)
-
+Firstly, clone the project using `https://github.com/settermjd/VideoHoster.git`.
+Then , from the project directory, either run it using the CLI web server, or 
+add a vhost configuration to your web server of choice. You can find sample 
+setups below. 
 
 ## Web Server Setup
 
