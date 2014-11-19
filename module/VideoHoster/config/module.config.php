@@ -8,7 +8,7 @@ return array(
                     'route'    => '[/pages[/:action]]',
                     'constraints' => array(
                         'action'     =>
-                            'about|faq|testimonials|support|privacy|copyright|disclaimer|terms
+                            'faq|testimonials|support|privacy|copyright|disclaimer|terms
                             |impressum',
                     ),
                     'defaults' => array(
