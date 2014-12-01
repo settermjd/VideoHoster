@@ -23,9 +23,9 @@ class ManageVideoForm extends ServerAwareForm
     {
         parent::__construct('ManageVideo');
 
-        $this->setAttribute('method', 'post')
+        /*$this->setAttribute('method', 'post')
             ->setAttribute('action', '/video/manage')
-            ->setAttribute('class', 'form-horizontal');
+            ->setAttribute('class', 'form-horizontal');*/
 
         // Add form elements
         $this->add(array(

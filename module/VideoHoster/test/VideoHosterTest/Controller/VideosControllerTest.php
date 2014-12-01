@@ -228,4 +228,10 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $this->assertMatchedRouteName('videos/view-video');
         $this->checkPageHeader();
     }
+
+    public function testCanDispatchToManageVideoPage()
+    {
+        $this->dispatch('/videos/manage');
+        $this->assertResponseStatusCode(200);
+    }
 }

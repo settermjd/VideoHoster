@@ -65,8 +65,6 @@ class ManageVideoFormTest extends BasicFormTest
         );
 
         $this->_formProperties = array(
-            'action' => '/video/manage',
-            'method' => 'post',
             'name' => 'ManageVideo'
         );
     }
@@ -74,7 +72,7 @@ class ManageVideoFormTest extends BasicFormTest
     /**
      * This provides a reusable test for the availability of the Search PAC form
      *
-     * @return SearchByAgeInDaysForm
+     * @return ManageVideoForm
      */
     protected function _getForm()
     {

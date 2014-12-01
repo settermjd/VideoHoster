@@ -74,6 +74,20 @@ class VideosController extends AbstractActionController
         );
     }
 
+    public function manageAction()
+    {
+        $formManager = $this->serviceLocator->get('FormElementManager');
+        $form = $formManager->get('VideoHoster\Form\ManageVideoForm');
+
+        return array(
+            'form' => $form,
+            'formElements' => array(
+                'videoId', 'name', 'slug', 'authorId', 'statusId',
+                'paymentRequirementId', 'description', 'extract',
+                'duration', 'publishDate', 'publishTime', 'levelId'
+            )
+        );
+    }
 
 }
 
