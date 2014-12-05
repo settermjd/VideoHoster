@@ -229,7 +229,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $this->checkPageHeader();
     }
 
-    public function testCanDispatchToManageVideoPage()
+    public function testCannotDispatchToManageVideoPage()
     {
         $this->dispatch('/videos/manage');
         $this->assertResponseStatusCode(200);

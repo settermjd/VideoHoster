@@ -15,6 +15,8 @@ class ManageVideoFormTest extends BasicFormTest
     {
         $this->_form = $this->_getForm();
 
+        $this->_getForm()->init();
+
         $this->_formFields = array(
             'videoId' => array(
                 'type' => 'hidden'
@@ -28,7 +30,8 @@ class ManageVideoFormTest extends BasicFormTest
                 'label' => 'Slug'
             ),
             'authorId' => array(
-                'type' => 'hidden',
+                'type' => 'select',
+                'label' => 'Author'
             ),
             'statusId' => array(
                 'type' => 'select',
