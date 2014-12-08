@@ -76,8 +76,18 @@ class VideosController extends AbstractActionController
 
     public function manageAction()
     {
+        // grab the slug from the route params
+        $slug = $this->params()->fromRoute('slug');
+
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('VideoHoster\Form\ManageVideoForm');
+
+        if (!empty($slug)) {
+            // Grab the video and set it in the video model, if available
+            if ($video = $this->videoTable->fetchBySlug($slug)) {
+                $form->setData($video->getArrayCopy());
+            }
+        }
 
         return array(
             'form' => $form,

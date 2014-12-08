@@ -229,9 +229,72 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $this->checkPageHeader();
     }
 
-    public function testCannotDispatchToManageVideoPage()
+    public function testWillLoadMatchingVideoOnManageVideoPageWhenAvailable()
     {
-        $this->dispatch('/videos/manage');
+        $video = new VideoModel();
+        $video->exchangeArray(array(
+            'videoId' => 12,
+            'name' => "Freddie Mercury Live",
+            'slug' => "freddie-mercury-live",
+            'description' => "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using.",
+            'authorId' => 1,
+            'statusId' => 1,
+            'paymentRequirementId' => 1,
+            'extract' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+            'duration' => 115,
+            'publishDate' => '2008-08-01',
+            'publishTime' => '11:15',
+            'levelId' => 1
+        ));
+        $slug = 'freddie-mercury-live';
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('fetchBySlug')
+            ->once()
+            ->andReturn($video);
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+        $this->dispatch('/videos/manage/freddie-mercury-live');
         $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryCount(
+            '//input[@type="text"][@name="name"][contains(@value, "Freddie Mercury Live")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//input[@type="hidden"][@name="videoId"][contains(@value, "12")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//input[@type="text"][@name="slug"][contains(@value, "freddie-mercury-live")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//textarea[@name="description"][contains(text(), "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using.")]', 1
+        );
+        /*$this->assertXpathQueryCount(
+            '//input[@type="select"][@name="authorId"][contains(@value, "1")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//select[@name="statusId"][contains(text(), "1")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//input[@type="select"][@name="paymentRequirementId"][contains(@value, "1")]', 1
+        );*/
+        $this->assertXpathQueryCount(
+            '//input[@type="text"][@name="extract"][contains(@value, "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//input[@type="text"][@name="duration"][contains(@value, "115")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//input[@type="text"][@name="publishDate"][contains(@value, "2008-08-01")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//input[@type="text"][@name="publishTime"][contains(@value, "11:15")]', 1
+        );
+        /*$this->assertXpathQueryCount(
+            '//input[@type="select"][@name="levelId"][contains(@value, "1")]', 1
+        );*/
     }
 }

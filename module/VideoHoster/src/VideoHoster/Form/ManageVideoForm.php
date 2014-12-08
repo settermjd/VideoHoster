@@ -59,9 +59,11 @@ class ManageVideoForm extends ServerAwareForm
         ));
 
         $this->add(array(
-            'type' => 'Zend\Form\Element\Hidden',
+            'type' => 'Zend\Form\Element\Select',
             'name' => 'authorId',
-            'options' => array(),
+            'options' => array(
+                'label' => 'Author',
+            ),
             'attributes' => array()
         ));
 
