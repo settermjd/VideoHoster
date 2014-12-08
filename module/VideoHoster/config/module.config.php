@@ -41,6 +41,18 @@ return array(
                             ),
                         ),
                     ),
+                    'manage' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/manage[/:slug]',
+                            'constraints' => array(
+                                'slug' => '[a-zA-Z][a-zA-Z-]*[a-zA-Z]'
+                            ),
+                            'defaults' => array(
+                                'action'     => 'Manage',
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),

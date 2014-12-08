@@ -1,0 +1,175 @@
+<h1><?php print $this->translate('Manage Video'); ?></h1>
+
+<div class="container-fluid">
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('videos/manage'));
+$form->setAttribute('class', 'form-horizontal');
+$form->setAttribute('method', 'post');
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+
+<fieldset>
+
+<div class="row-fluid top-buffer">
+    <div class="span6">
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('name');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('slug');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('authorId');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formSelect($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('statusId');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formSelect($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('paymentRequirementId');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('description');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formTextarea($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('publishDate');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('publishTime');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('duration');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('levelId');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php
+            $element = $form->get('extract');
+            echo $this->formLabel($element);
+            ?>
+            <div class="controls">
+                <?php
+                echo $this->formText($element);
+                echo $this->formElementErrors($element);
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <div class="form-actions">
+            <?php echo $this->formHidden($form->get('videoId')); ?>&nbsp;
+            <?php echo $this->formSubmit($form->get('submit')); ?>
+        </div>
+    </div>
+</div>
+
+</fieldset>
+
+<?php echo $this->form()->closeTag(); ?>
