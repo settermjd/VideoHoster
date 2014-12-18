@@ -32,7 +32,7 @@ class AuthorTableTest extends PHPUnit_Framework_TestCase
         $mockSql = \Mockery::mock('Zend\Db\Sql\Select');
         $mockSql->shouldReceive('select')->andReturn($mockSql);
         $mockSql->shouldReceive('columns')
-            ->with(array('user_id', 'display_name'))
+            ->with(array('userId', 'displayName'))
             ->andReturn($mockSql);
 
         $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
