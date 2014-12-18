@@ -72,6 +72,19 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $serviceManager->setService(
             'VideoHoster\Tables\LevelTable', $levelTable
         );
+
+        $paymentRequirementTable = \Mockery::mock('VideoHoster\Tables\PaymentRequirementTable');
+        $paymentRequirementTable->shouldReceive('getSelectList')
+            ->once()
+            ->andReturn(array(
+                '1' => 'Free',
+            ));
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\PaymentRequirementTable', $paymentRequirementTable
+        );
     }
 
     protected function checkPageHeader()
