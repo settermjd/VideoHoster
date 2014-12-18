@@ -1,20 +1,12 @@
 <?php
 namespace VideoHosterTest\Controller;
 
-use VideoHoster\Models\StatusModel;
-use VideoHosterTest\Bootstrap;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use VideoHoster\Controller\VideosController;
-use VideoHoster\Tables\VideoTable;
 use VideoHoster\Models\VideoModel;
 use Zend\Db\ResultSet\ResultSet;
-use Zend\Server\Method\Parameter;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 use Faker;
+use Zend\Stdlib\Parameters;
 
 class VideosControllerTest extends AbstractHttpControllerTestCase
 {
@@ -352,5 +344,29 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         /*$this->assertXpathQueryCount(
             '//input[@type="select"][@name="levelId"][contains(@value, "1")]', 1
         );*/
+    }
+
+    public function testWillRedirectToManageRecordAfterSuccessfulUpdate()
+    {
+        $this->getRequest()
+            ->setMethod('POST')
+            ->setPost(new Parameters(
+                array(
+                    'videoId' => 1,
+                    'name' => 'test video',
+                    'slug' => 'test-video',
+                    'authorId' => 1,
+                    'statusId' => 1,
+                    'paymentRequirementId' => 1,
+                    'description' => "here is a description",
+                    'extract' => 'here is a',
+                    'duration' => 131,
+                    'publishDate' => '2015-01-01',
+                    'publishTime' => '11:00',
+                    'levelId' => 1
+                )
+            ));
+        $this->dispatch('/');
+        $this->assertRedirectTo('/videos/manage/test-video');
     }
 }
