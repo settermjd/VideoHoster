@@ -162,20 +162,6 @@ class VideosController extends AbstractActionController
 
         return array(
             'form' => $form,
-            'formElements' => array(
-                'videoId',
-                'name',
-                'slug',
-                'authorId',
-                'statusId',
-                'paymentRequirementId',
-                'description',
-                'extract',
-                'duration',
-                'publishDate',
-                'publishTime',
-                'levelId'
-            )
         );
     }
 
