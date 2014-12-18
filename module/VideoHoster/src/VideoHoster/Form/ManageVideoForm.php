@@ -14,7 +14,6 @@
  */
 namespace VideoHoster\Form;
 
-use Zend\Form\Form;
 use Zend\Form\Element;
 
 class ManageVideoForm extends ServerAwareForm

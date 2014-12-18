@@ -7,6 +7,7 @@ use VideoHoster\Tables\StatusTable;
 use VideoHoster\Tables\AuthorTable;
 use VideoHoster\Tables\LevelTable;
 use VideoHoster\Tables\PaymentRequirementTable;
+use VideoHoster\Models\VideoModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -124,25 +125,37 @@ class VideosController extends AbstractActionController
     {
         // grab the slug from the route params
         $slug = $this->params()->fromRoute('slug');
-
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('VideoHoster\Form\ManageVideoForm');
+        $form->get('statusId')->setValueOptions($this->statusTable->getSelectList());
+        $form->get('authorId')->setValueOptions($this->authorTable->getSelectList());
+        $form->get('levelId')->setValueOptions($this->levelTable->getSelectList());
+        $form->get('paymentRequirementId')->setValueOptions(
+            $this->paymentRequirementTable->getSelectList()
+        );
 
-        if (!empty($slug)) {
-            // Grab the video and set it in the video model, if available
-            if ($video = $this->videoTable->fetchBySlug($slug)) {
-                $form->setData($video->getArrayCopy());
-                $form->get('statusId')->setValueOptions(
-                    $this->statusTable->getSelectList()
-                );
-                $form->get('authorId')->setValueOptions(
-                    $this->authorTable->getSelectList()
-                );
-                $form->get('levelId')->setValueOptions(
-                    $this->levelTable->getSelectList()
-                );
-                $form->get('paymentRequirementId')->setValueOptions(
-                    $this->paymentRequirementTable->getSelectList()
+        if ($this->getRequest()->isGet()) {
+            if (!empty($slug)) {
+                // Grab the video and set it in the video model, if available
+                if ($video = $this->videoTable->fetchBySlug($slug)) {
+                    $form->setData($video->getArrayCopy());
+                }
+            }
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $video = new VideoModel();
+                $video->exchangeArray($form->getData());
+                $video->videoId = $this->videoTable->save($video);
+
+
+                return $this->redirect()->toRoute(
+                    'videos/manage',
+                    array(
+                        'slug' => trim($video->slug)
+                    )
                 );
             }
         }
