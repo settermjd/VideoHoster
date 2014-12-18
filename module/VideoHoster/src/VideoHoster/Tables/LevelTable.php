@@ -20,6 +20,11 @@ class LevelTable
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array("levelId", "name"));
-        return $this->tableGateway->selectWith($select);
+        $results = $this->tableGateway->selectWith($select);
+        $data = array();
+        foreach ($results as $result) {
+            $data[$result->levelId] = $result->name;
+        }
+        return $data;
     }
 }
