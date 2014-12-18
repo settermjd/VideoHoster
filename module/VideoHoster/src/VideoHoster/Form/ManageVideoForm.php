@@ -15,12 +15,15 @@
 namespace VideoHoster\Form;
 
 use Zend\Form\Element;
+use VideoHoster\InputFilter\VideoInputFilter;
 
 class ManageVideoForm extends ServerAwareForm
 {
     public function __construct()
     {
         parent::__construct('ManageVideo');
+
+        $this->setInputFilter(new VideoInputFilter());
 
         // Add form elements
         $this->add(array(
