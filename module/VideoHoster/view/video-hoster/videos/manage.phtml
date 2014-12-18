@@ -13,160 +13,153 @@ echo $this->form()->openTag($form);
 
 <fieldset>
 
-<div class="row-fluid top-buffer">
-    <div class="span6">
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('name');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('slug');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('authorId');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formSelect($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('statusId');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formSelect($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('paymentRequirementId');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('description');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formTextarea($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('publishDate');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('publishTime');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('duration');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('levelId');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php
-            $element = $form->get('extract');
-            echo $this->formLabel($element);
-            ?>
-            <div class="controls">
-                <?php
-                echo $this->formText($element);
-                echo $this->formElementErrors($element);
-                ?>
-            </div>
-        </div>
+<div class="form-group">
+    <?php
+    $element = $form->get('name');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span12">
-        <div class="form-actions">
-            <?php echo $this->formHidden($form->get('videoId')); ?>&nbsp;
-            <?php echo $this->formSubmit($form->get('submit')); ?>
-        </div>
+<div class="form-group">
+    <?php
+    $element = $form->get('slug');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('authorId');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formSelect($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('statusId');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formSelect($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('paymentRequirementId');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('description');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formTextarea($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('publishDate');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('publishTime');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('duration');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('levelId');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <?php
+    $element = $form->get('extract');
+    echo $this->formLabel($element);
+    ?>
+    <div class="col-sm-10">
+        <?php
+        echo $this->formText($element);
+        echo $this->formElementErrors($element);
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->formHidden($form->get('videoId')); ?>&nbsp;
+        <?php echo $this->formSubmit($form->get('submit')); ?>
     </div>
 </div>
 

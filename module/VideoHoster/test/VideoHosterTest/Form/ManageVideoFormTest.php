@@ -23,7 +23,8 @@ class ManageVideoFormTest extends BasicFormTest
             ),
             'name' => array(
                 'type' => 'text',
-                'label' => 'Video Name'
+                'label' => 'Video Name',
+                'class' => 'form-control'
             ),
             'slug' => array(
                 'type' => 'text',
