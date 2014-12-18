@@ -7,6 +7,7 @@ use Zend\Stdlib\Hydrator\ObjectProperty;
 use VideoHoster\Models\VideoModel;
 use VideoHoster\Models\StatusModel;
 use VideoHoster\Models\AuthorModel;
+use VideoHoster\Models\PaymentRequirementModel;
 use VideoHoster\Models\LevelModel;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\TableGateway\TableGateway;
@@ -44,6 +45,12 @@ class TableGatewayAbstractFactory implements AbstractFactoryInterface
                 $rowObjectPrototype = new LevelModel();
                 $resultSet = new HydratingResultSet($hydrator, $rowObjectPrototype);
                 return new TableGateway('tbllevel', $dbAdapter, null, $resultSet);
+                break;
+            case ('VideoHoster\Tables\PaymentRequirementTableGateway'):
+                $hydrator = new ObjectProperty();
+                $rowObjectPrototype = new PaymentRequirementModel();
+                $resultSet = new HydratingResultSet($hydrator, $rowObjectPrototype);
+                return new TableGateway('tblpaymentrequirement', $dbAdapter, null, $resultSet);
                 break;
             case ('VideoHoster\Tables\AuthorTableGateway'):
                 $hydrator = new ObjectProperty();
