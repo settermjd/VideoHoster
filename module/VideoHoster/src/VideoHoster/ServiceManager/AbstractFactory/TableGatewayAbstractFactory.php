@@ -1,6 +1,7 @@
 <?php
 namespace VideoHoster\ServiceManager\AbstractFactory;
 
+use Zend\Form\Element\Date;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\Hydrator\ObjectProperty;
@@ -11,6 +12,8 @@ use VideoHoster\Models\PaymentRequirementModel;
 use VideoHoster\Models\LevelModel;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\TableGateway\TableGateway;
+use VideoHoster\Hydrator\Strategy\DateStrategy;
+use VideoHoster\Hydrator\Strategy\TimeStrategy;
 
 class TableGatewayAbstractFactory implements AbstractFactoryInterface
 {
@@ -67,6 +70,8 @@ class TableGatewayAbstractFactory implements AbstractFactoryInterface
             case ('VideoHoster\Tables\VideoTableGateway'):
             default:
                 $hydrator = new ObjectProperty();
+                $hydrator->addStrategy('publishDate', new DateStrategy());
+                $hydrator->addStrategy('publishTime', new TimeStrategy());
                 $rowObjectPrototype = new VideoModel();
                 $resultSet = new HydratingResultSet($hydrator, $rowObjectPrototype);
                 return new TableGateway('tblvideo', $dbAdapter, null, $resultSet);
