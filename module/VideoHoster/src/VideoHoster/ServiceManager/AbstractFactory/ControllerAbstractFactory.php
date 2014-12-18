@@ -54,6 +54,7 @@ class ControllerAbstractFactory implements AbstractFactoryInterface
 
             $controller = new $controllerName(
                 $sm->get('VideoHoster\Tables\VideoTable'),
+                $sm->get('VideoHoster\Tables\StatusTable'),
                 $cache
             );
         }

@@ -17,6 +17,11 @@ class StatusTable
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array("statusId", "name"));
-        return $this->tableGateway->selectWith($select);
+        $results = $this->tableGateway->selectWith($select);
+        $data = array();
+        foreach ($results as $result) {
+            $data[$result->statusId] = $result->name;
+        }
+        return $data;
     }
 }

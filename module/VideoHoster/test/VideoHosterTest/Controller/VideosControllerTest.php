@@ -1,6 +1,7 @@
 <?php
 namespace VideoHosterTest\Controller;
 
+use VideoHoster\Models\StatusModel;
 use VideoHosterTest\Bootstrap;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use VideoHoster\Controller\VideosController;
@@ -30,6 +31,20 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
             'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $statusTable = \Mockery::mock('VideoHoster\Tables\StatusTable');
+        $statusTable->shouldReceive('getSelectList')
+            ->once()
+            ->andReturn(array(
+                '1' => 'draft',
+                '2' => 'live'
+            ));
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\StatusTable', $statusTable
         );
     }
 
@@ -258,7 +273,9 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $serviceManager->setService(
             'VideoHoster\Tables\VideoTable', $mockTable
         );
+        
         $this->dispatch('/videos/manage/freddie-mercury-live');
+
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount(
             '//input[@type="text"][@name="name"][contains(@value, "Freddie Mercury Live")]', 1
