@@ -162,7 +162,7 @@ class ManageVideoForm extends ServerAwareForm
                 'label' => 'Publish Date'
             ),
             'attributes' => array(
-                'class' => 'form-control',
+                'class' => 'form-control datepicker',
                 'tabindex' => 12,
             )
         ));
