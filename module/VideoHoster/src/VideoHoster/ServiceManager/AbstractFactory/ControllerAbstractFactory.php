@@ -57,6 +57,7 @@ class ControllerAbstractFactory implements AbstractFactoryInterface
                 $sm->get('VideoHoster\Tables\StatusTable'),
                 $sm->get('VideoHoster\Tables\AuthorTable'),
                 $sm->get('VideoHoster\Tables\LevelTable'),
+                $sm->get('VideoHoster\Tables\PaymentRequirementTable'),
                 $cache
             );
         }

@@ -6,6 +6,7 @@ use VideoHoster\Tables\VideoTable;
 use VideoHoster\Tables\StatusTable;
 use VideoHoster\Tables\AuthorTable;
 use VideoHoster\Tables\LevelTable;
+use VideoHoster\Tables\PaymentRequirementTable;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -49,6 +50,14 @@ class VideosController extends AbstractActionController
      * @access protected
      */
     protected $levelTable;
+
+    /**
+     * Provides connection to the paymentRequirement table in the database
+     *
+     * @var \VideoHoster\Tables\PaymentRequirementTable paymentRequirementTable
+     * @access protected
+     */
+    protected $paymentRequirementTable;
     
     /**
      * Cache object
@@ -69,12 +78,14 @@ class VideosController extends AbstractActionController
         StatusTable $statusTable,
         AuthorTable $authorTable,
         LevelTable $levelTable,
+        PaymentRequirementTable $paymentRequirementTable,
         $cache = null
     ) {
         $this->videoTable = $videoTable;
         $this->statusTable = $statusTable;
         $this->authorTable = $authorTable;
         $this->levelTable = $levelTable;
+        $this->paymentRequirementTable = $paymentRequirementTable;
 
         if (!is_null($cache)) {
             $this->cache = $cache;
@@ -129,6 +140,9 @@ class VideosController extends AbstractActionController
                 );
                 $form->get('levelId')->setValueOptions(
                     $this->levelTable->getSelectList()
+                );
+                $form->get('paymentRequirementId')->setValueOptions(
+                    $this->paymentRequirementTable->getSelectList()
                 );
             }
         }
