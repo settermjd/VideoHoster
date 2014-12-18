@@ -38,7 +38,7 @@ class VideosController extends AbstractActionController
     /**
      * Provides connection to the author table in the database
      *
-     * @var \VideoHoster\Tables\StatusTable authorTable
+     * @var \VideoHoster\Tables\AuthorTable authorTable
      * @access protected
      */
     protected $authorTable;
@@ -46,7 +46,7 @@ class VideosController extends AbstractActionController
     /**
      * Provides connection to the level table in the database
      *
-     * @var \VideoHoster\Tables\StatusTable levelTable
+     * @var \VideoHoster\Tables\LevelTable levelTable
      * @access protected
      */
     protected $levelTable;
