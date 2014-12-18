@@ -4,6 +4,7 @@ namespace VideoHoster\Controller;
 
 use VideoHoster\Tables\VideoTable;
 use VideoHoster\Tables\StatusTable;
+use VideoHoster\Tables\AuthorTable;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -33,6 +34,14 @@ class VideosController extends AbstractActionController
     protected $statusTable;
 
     /**
+     * Provides connection to the author table in the database
+     *
+     * @var \VideoHoster\Tables\StatusTable authorTable
+     * @access protected
+     */
+    protected $authorTable;
+
+    /**
      * Cache object
      *
      * @var null
@@ -46,10 +55,15 @@ class VideosController extends AbstractActionController
      * @access public
      * @return void
      */
-    public function __construct(VideoTable $videoTable, StatusTable $statusTable, $cache = null)
-    {
+    public function __construct(
+        VideoTable $videoTable,
+        StatusTable $statusTable,
+        AuthorTable $authorTable,
+        $cache = null
+    ) {
         $this->videoTable = $videoTable;
         $this->statusTable = $statusTable;
+        $this->authorTable = $authorTable;
 
         if (!is_null($cache)) {
             $this->cache = $cache;
@@ -99,15 +113,27 @@ class VideosController extends AbstractActionController
                 $form->get('statusId')->setValueOptions(
                     $this->statusTable->getSelectList()
                 );
+                $form->get('authorId')->setValueOptions(
+                    $this->authorTable->getSelectList()
+                );
             }
         }
 
         return array(
             'form' => $form,
             'formElements' => array(
-                'videoId', 'name', 'slug', 'authorId', 'statusId',
-                'paymentRequirementId', 'description', 'extract',
-                'duration', 'publishDate', 'publishTime', 'levelId'
+                'videoId',
+                'name',
+                'slug',
+                'authorId',
+                'statusId',
+                'paymentRequirementId',
+                'description',
+                'extract',
+                'duration',
+                'publishDate',
+                'publishTime',
+                'levelId'
             )
         );
     }

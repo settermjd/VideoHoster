@@ -16,7 +16,12 @@ class AuthorTable
     public function getSelectList()
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(array("userId", "displayName"));
-        return $this->tableGateway->selectWith($select);
+        $select->columns(array("user_id", "display_name"));
+        $results = $this->tableGateway->selectWith($select);
+        $data = array();
+        foreach ($results as $result) {
+            $data[$result->user_id] = $result->display_name;
+        }
+        return $data;
     }
 }

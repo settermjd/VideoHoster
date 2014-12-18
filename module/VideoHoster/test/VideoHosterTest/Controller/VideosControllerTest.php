@@ -46,6 +46,19 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $serviceManager->setService(
             'VideoHoster\Tables\StatusTable', $statusTable
         );
+
+        $authorTable = \Mockery::mock('VideoHoster\Tables\AuthorTable');
+        $authorTable->shouldReceive('getSelectList')
+            ->once()
+            ->andReturn(array(
+                '1' => 'Matthew Setter',
+            ));
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\AuthorTable', $authorTable
+        );
     }
 
     protected function checkPageHeader()
