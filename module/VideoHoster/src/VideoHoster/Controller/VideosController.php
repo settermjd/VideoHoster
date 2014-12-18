@@ -3,6 +3,7 @@
 namespace VideoHoster\Controller;
 
 use VideoHoster\Tables\VideoTable;
+use VideoHoster\Tables\StatusTable;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -24,6 +25,14 @@ class VideosController extends AbstractActionController
     protected $videoTable;
 
     /**
+     * Provides connection to the status table in the database
+     *
+     * @var \VideoHoster\Tables\StatusTable statusTable
+     * @access protected
+     */
+    protected $statusTable;
+
+    /**
      * Cache object
      *
      * @var null
@@ -37,9 +46,10 @@ class VideosController extends AbstractActionController
      * @access public
      * @return void
      */
-    public function __construct(VideoTable $videoTable, $cache = null)
+    public function __construct(VideoTable $videoTable, StatusTable $statusTable, $cache = null)
     {
         $this->videoTable = $videoTable;
+        $this->statusTable = $statusTable;
 
         if (!is_null($cache)) {
             $this->cache = $cache;
@@ -86,6 +96,9 @@ class VideosController extends AbstractActionController
             // Grab the video and set it in the video model, if available
             if ($video = $this->videoTable->fetchBySlug($slug)) {
                 $form->setData($video->getArrayCopy());
+                $form->get('statusId')->setValueOptions(
+                    $this->statusTable->getSelectList()
+                );
             }
         }
 
