@@ -5,15 +5,19 @@ use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\Hydrator\ObjectProperty;
 use VideoHoster\Models\VideoModel;
+use VideoHoster\Models\StatusModel;
+use VideoHoster\Models\AuthorModel;
+use VideoHoster\Models\LevelModel;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
 class TableGatewayAbstractFactory implements AbstractFactoryInterface
 {
     public function canCreateServiceWithName(
-        ServiceLocatorInterface $serviceLocator, $name, $requestedName
-    )
-    {
+        ServiceLocatorInterface $serviceLocator,
+        $name,
+        $requestedName
+    ) {
         if (fnmatch('*TableGateway', $requestedName)) {
             return true;
         }
@@ -22,9 +26,10 @@ class TableGatewayAbstractFactory implements AbstractFactoryInterface
     }
 
     public function createServiceWithName(
-        ServiceLocatorInterface $serviceLocator, $name, $requestedName
-    )
-    {
+        ServiceLocatorInterface $serviceLocator,
+        $name,
+        $requestedName
+    ) {
         $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
 
         /**
@@ -34,6 +39,24 @@ class TableGatewayAbstractFactory implements AbstractFactoryInterface
          * in a later release.
          */
         switch ($requestedName) {
+            case ('VideoHoster\Tables\LevelTableGateway'):
+                $hydrator = new ObjectProperty();
+                $rowObjectPrototype = new LevelModel();
+                $resultSet = new HydratingResultSet($hydrator, $rowObjectPrototype);
+                return new TableGateway('tbllevel', $dbAdapter, null, $resultSet);
+                break;
+            case ('VideoHoster\Tables\AuthorTableGateway'):
+                $hydrator = new ObjectProperty();
+                $rowObjectPrototype = new AuthorModel();
+                $resultSet = new HydratingResultSet($hydrator, $rowObjectPrototype);
+                return new TableGateway('tbluser', $dbAdapter, null, $resultSet);
+                break;
+            case ('VideoHoster\Tables\StatusTableGateway'):
+                $hydrator = new ObjectProperty();
+                $rowObjectPrototype = new StatusModel();
+                $resultSet = new HydratingResultSet($hydrator, $rowObjectPrototype);
+                return new TableGateway('tblstatus', $dbAdapter, null, $resultSet);
+                break;
             case ('VideoHoster\Tables\VideoTableGateway'):
             default:
                 $hydrator = new ObjectProperty();
