@@ -5,6 +5,7 @@ namespace VideoHoster\Controller;
 use VideoHoster\Tables\VideoTable;
 use VideoHoster\Tables\StatusTable;
 use VideoHoster\Tables\AuthorTable;
+use VideoHoster\Tables\LevelTable;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -42,6 +43,14 @@ class VideosController extends AbstractActionController
     protected $authorTable;
 
     /**
+     * Provides connection to the level table in the database
+     *
+     * @var \VideoHoster\Tables\StatusTable levelTable
+     * @access protected
+     */
+    protected $levelTable;
+    
+    /**
      * Cache object
      *
      * @var null
@@ -59,11 +68,13 @@ class VideosController extends AbstractActionController
         VideoTable $videoTable,
         StatusTable $statusTable,
         AuthorTable $authorTable,
+        LevelTable $levelTable,
         $cache = null
     ) {
         $this->videoTable = $videoTable;
         $this->statusTable = $statusTable;
         $this->authorTable = $authorTable;
+        $this->levelTable = $levelTable;
 
         if (!is_null($cache)) {
             $this->cache = $cache;
@@ -115,6 +126,9 @@ class VideosController extends AbstractActionController
                 );
                 $form->get('authorId')->setValueOptions(
                     $this->authorTable->getSelectList()
+                );
+                $form->get('levelId')->setValueOptions(
+                    $this->levelTable->getSelectList()
                 );
             }
         }
