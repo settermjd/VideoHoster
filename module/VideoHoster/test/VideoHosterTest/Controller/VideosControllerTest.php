@@ -169,6 +169,24 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $this->checkPageHeader();
     }
 
+    public function testCanDispatchToFreeVideoPages()
+    {
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('fetchFreeVideos')
+            ->once()
+            ->andReturn(new ResultSet());
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->dispatch('/videos/free');
+        $this->assertResponseStatusCode(200);
+        $this->checkPageHeader();
+    }
+
     public function validVideoPagesProvider()
     {
         $data = array();
@@ -367,6 +385,9 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
                 )
             ));
         $this->dispatch('/');
+
+        $this->markTestIncomplete("This test has not yet been fully implemented");
+
         $this->assertRedirectTo('/videos/manage/test-video');
     }
 }
