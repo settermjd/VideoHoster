@@ -69,6 +69,38 @@ class VideoTable
     }
 
     /**
+     * Return all active videos in reverse order of published date
+     *
+     * @return bool|\Zend\Db\ResultSet\ResultSetInterface
+     */
+    public function fetchFreeVideos()
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->join(
+            'tblstatus',
+            'tblstatus.statusId = tblvideo.statusId',
+            array()
+        )
+            ->join(
+                'tblpaymentrequirement',
+                'tblpaymentrequirement.paymentRequirementId = tblvideo.paymentRequirementId',
+                array()
+            )
+            ->where(array('tblstatus.name' => 'active'))
+            ->where(array('tblpaymentrequirement.name' => 'free'))
+            ->order('publishDate DESC');
+
+        $results = $this->tableGateway->selectWith($select);
+
+        if (!$results->count() || is_null($results)) {
+            $results = new ResultSet();
+            $results->initialize(array());
+        }
+
+        return $results;
+    }
+
+    /**
      * Create a new or update an existing record
      *
      * @param VideoModel $video
