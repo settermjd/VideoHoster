@@ -54,10 +54,12 @@
                 <li><a
                         href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a>
                 </li>
+                <?php if (!$this->zfcUserIdentity()): ?>
                 <li><a
                         href="<?php echo $this->url('home') ?>"><?php echo $this->translate
                         ('Subscribe') ?></a>
                 </li>
+                <?php endif; ?>
                 <li><a
                         href="<?php echo $this->url('videos/free') ?>"><?php echo $this->translate
                         ('Free Screencasts') ?></a>
@@ -68,18 +70,15 @@
                 </li>
                 <li><a href="<?php echo $this->url('business-pages', array('action' => 'faq')) ?>"
                         ><?php echo $this->translate('FAQ') ?></a></li>
-                <!-- Test if the User is connected -->
-                <?php if (!$this->zfcUserIdentity()): ?>
-                    <!-- display the login form -->
-                    <li>
-                        <a href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Login') ?></a>
-                    </li>
-                <?php else: ?>
-                    <!-- display the 'display name' of the user -->
-                    <?php echo $this->translate('Hello') . ' ' . $this->zfcUserIdentity()->getDisplayname(); ?>
-                <?php endif ?>
-            </ul>
-            </li>
+                <li>
+                    <?php if (!$this->zfcUserIdentity()): ?>
+                    <a href="<?php echo $this->url('zfcuser/login') ?>"
+                        ><?php echo $this->translate('Login') ?></a>
+                    <?php else: ?>
+                        <a href="<?php echo $this->url('zfcuser/logout') ?>"
+                            ><?php echo $this->translate('Logout') ?></a>
+                    <?php endif; ?>
+                </li>
             </ul>
         </div>
         <!--/.nav-collapse -->
