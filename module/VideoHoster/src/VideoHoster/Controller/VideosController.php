@@ -121,6 +121,13 @@ class VideosController extends AbstractActionController
         );
     }
 
+    public function freeAction()
+    {
+        return array(
+            'tutorials' => $this->videoTable->fetchFreeVideos()
+        );
+    }
+
     public function manageAction()
     {
         // grab the slug from the route params

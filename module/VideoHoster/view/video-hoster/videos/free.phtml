@@ -1,0 +1,14 @@
+<h1><?php print $this->translate('Free Screencasts'); ?></h1>
+
+<?php if (count($this->tutorials)) : ?>
+    <?php print $this->partialLoop('video-results', $this->tutorials); ?>
+    <?php if ($this->partialLoop()->getPartialCounter() % 3 != 0): ?>
+        </div>
+    <?php endif; ?>
+<?php else : ?>
+    <div class="row">
+        <div class="col-lg-12">
+            <?php print $this->translate('Sorry, no tutorials are currently available'); ?>
+        </div>
+    </div>
+<?php endif; ?>

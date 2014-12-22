@@ -53,6 +53,15 @@ return array(
                             ),
                         ),
                     ),
+                    'free' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/free',
+                            'defaults' => array(
+                                'action'     => 'Free',
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),
