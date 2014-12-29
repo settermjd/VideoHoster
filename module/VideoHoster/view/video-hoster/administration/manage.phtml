@@ -4,7 +4,7 @@
 
 <?php
 $form = $this->form;
-$form->setAttribute('action', $this->url('videos/manage'));
+$form->setAttribute('action', $this->url('administration/manage'));
 $form->setAttribute('class', 'form-horizontal');
 $form->setAttribute('method', 'post');
 $form->prepare();
@@ -160,6 +160,8 @@ echo $this->form()->openTag($form);
     <div class="col-sm-offset-2 col-sm-10">
         <?php echo $this->formHidden($form->get('videoId')); ?>&nbsp;
         <?php echo $this->formSubmit($form->get('submit')); ?>
+        <a href="<?php print $this->url('administration/manage'); ?>" class="btn
+        btn-default">Cancel</a>
     </div>
 </div>
 

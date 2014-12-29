@@ -11,7 +11,7 @@ use VideoHoster\Models\VideoModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class VideosController extends AbstractActionController
+class AdministrationController extends AbstractActionController
 {
     /**
      * Set the default route to redirect to
@@ -59,7 +59,7 @@ class VideosController extends AbstractActionController
      * @access protected
      */
     protected $paymentRequirementTable;
-    
+
     /**
      * Cache object
      *
@@ -95,36 +95,62 @@ class VideosController extends AbstractActionController
 
     public function indexAction()
     {
-        return new ViewModel(
-            array(
-                'tutorials' => $this->videoTable->fetchActiveVideos()
-            )
+        return array(
+            'videos' => $this->videoTable->fetchAllVideos()
         );
     }
 
-    public function ViewVideoAction()
+    public function manageAction()
     {
-        // grab the slug from the route params
-        $slug = $this->params()->fromRoute('slug');
-
-        // Grab the video and set it in the video model, if available
-        if ($video = $this->videoTable->fetchBySlug($slug)) {
-            return array(
-                'video' => $video
+        if (!$this->zfcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute(
+                'videos', array()
             );
         }
 
-        // if the video can't be found, redirect to the main page
-        return $this->redirect()->toRoute(
-            self::DEFAULT_ROUTE,
-            array('action' => 'manage')
+        // grab the slug from the route params
+        $slug = $this->params()->fromRoute('slug');
+        $formManager = $this->serviceLocator->get('FormElementManager');
+        $form = $formManager->get('VideoHoster\Form\ManageVideoForm');
+        $form->get('statusId')->setValueOptions($this->statusTable->getSelectList());
+        $form->get('authorId')->setValueOptions($this->authorTable->getSelectList());
+        $form->get('levelId')->setValueOptions($this->levelTable->getSelectList());
+        $form->get('paymentRequirementId')->setValueOptions(
+            $this->paymentRequirementTable->getSelectList()
         );
-    }
 
-    public function freeAction()
-    {
+        if ($this->getRequest()->isGet()) {
+            if (!empty($slug)) {
+                // Grab the video and set it in the video model, if available
+                if ($video = $this->videoTable->fetchBySlug($slug)) {
+                    // preset the author id to the logged in user
+                    $form->get('authorId')->setValue(
+                        $this->zfcUserAuthentication()->getIdentity()->getId()
+                    );
+                    $form->setData($video->getArrayCopy());
+                }
+            }
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+
+            if ($form->isValid()) {
+                $video = new VideoModel();
+                $video->exchangeArray($form->getData());
+                $video->videoId = $this->videoTable->save($video);
+
+                return $this->redirect()->toRoute(
+                    'administration/manage',
+                    array(
+                        'slug' => trim($video->slug)
+                    )
+                );
+            }
+        }
+
         return array(
-            'tutorials' => $this->videoTable->fetchFreeVideos()
+            'form' => $form,
         );
     }
 

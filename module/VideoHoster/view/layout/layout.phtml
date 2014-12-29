@@ -68,18 +68,30 @@
                 </li>
                 <li><a href="<?php echo $this->url('business-pages', array('action' => 'faq')) ?>"
                         ><?php echo $this->translate('FAQ') ?></a></li>
-                <!-- Test if the User is connected -->
+
                 <?php if (!$this->zfcUserIdentity()): ?>
-                    <!-- display the login form -->
-                    <li>
-                        <a href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Login') ?></a>
-                    </li>
+                <li>
+                    <a href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Login') ?></a>
+                </li>
                 <?php else: ?>
-                    <!-- display the 'display name' of the user -->
-                    <?php echo $this->translate('Hello') . ' ' . $this->zfcUserIdentity()->getDisplayname(); ?>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle"
+                    data-toggle="dropdown">Admin <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?php print $this->url('administration');
+                            ?>">All Screencasts</a></li>
+                        <li><a href="<?php print $this->url('administration/manage');
+                            ?>">New Screencast</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="<?php echo $this->url('zfcuser/logout') ?>"><?php echo
+                                $this->translate('Logout') ?></a>
+                        </li>
+                    </ul>
+                </li>
                 <?php endif ?>
-            </ul>
-            </li>
+                </li>
             </ul>
         </div>
         <!--/.nav-collapse -->

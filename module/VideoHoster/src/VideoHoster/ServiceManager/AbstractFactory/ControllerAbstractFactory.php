@@ -40,7 +40,8 @@ class ControllerAbstractFactory implements AbstractFactoryInterface
         $controllerName = $requestedName . 'Controller';
         $controller = null;
 
-        if (fnmatch('*Videos', $requestedName)) {
+        // Instantiate the VideosController or AdministrationController
+        if (fnmatch('*Videos', $requestedName) || fnmatch('*Administration', $requestedName)) {
             $sm = $serviceLocator->getServiceLocator();
             $cache = array();
 

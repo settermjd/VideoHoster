@@ -17,6 +17,38 @@ return array(
                     ),
                 ),
             ),
+            /**
+             * Routes to administer videos/screencasts
+             */
+            'administration' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/administration',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'VideoHoster\Controller',
+                        'controller'    => 'Administration',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'manage' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/manage[/:slug]',
+                            'constraints' => array(
+                                'slug' => '[a-zA-Z][a-zA-Z-]*[a-zA-Z]'
+                            ),
+                            'defaults' => array(
+                                'action'     => 'manage',
+                            ),
+                        ),
+                    ),
+                )
+            ),
+            /**
+             * Routes to view videos/screencasts
+             */
             'videos' => array(
                 'type'    => 'Literal',
                 'options' => array(
@@ -38,18 +70,6 @@ return array(
                             ),
                             'defaults' => array(
                                 'action'     => 'ViewVideo',
-                            ),
-                        ),
-                    ),
-                    'manage' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/manage[/:slug]',
-                            'constraints' => array(
-                                'slug' => '[a-zA-Z][a-zA-Z-]*[a-zA-Z]'
-                            ),
-                            'defaults' => array(
-                                'action'     => 'Manage',
                             ),
                         ),
                     ),
