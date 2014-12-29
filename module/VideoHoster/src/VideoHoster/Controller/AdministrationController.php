@@ -9,7 +9,9 @@ use VideoHoster\Tables\LevelTable;
 use VideoHoster\Tables\PaymentRequirementTable;
 use VideoHoster\Models\VideoModel;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Zend\Paginator\Adapter\ArrayAdapter;
+use Zend\Paginator\Adapter\Iterator;
+use Zend\Paginator\Paginator;
 
 class AdministrationController extends AbstractActionController
 {
@@ -19,6 +21,10 @@ class AdministrationController extends AbstractActionController
      * @var string
      */
     const DEFAULT_ROUTE = 'videos';
+
+    const DEFAULT_PAGE = 1;
+
+    const DEFAULT_RECORDS_PER_PAGE = 10;
 
     /**
      * Provides connection to the videos table in the database
@@ -152,6 +158,35 @@ class AdministrationController extends AbstractActionController
         return array(
             'form' => $form,
         );
+    }
+
+    protected function getPaginator($resultset)
+    {
+        if (is_array($resultset)) {
+            $paginator = new Paginator(
+                new ArrayAdapter($resultset)
+            );
+        } else {
+            $paginator = new Paginator(
+                new Iterator($resultset)
+            );
+        }
+
+        $paginator->setCurrentPageNumber(
+            $this->params()->fromRoute(
+                'page',
+                self::DEFAULT_PAGE
+            )
+        );
+
+        $paginator->setItemCountPerPage(
+            $this->params()->fromRoute(
+                'perPage',
+                self::DEFAULT_RECORDS_PER_PAGE
+            )
+        );
+
+        return $paginator;
     }
 
 }

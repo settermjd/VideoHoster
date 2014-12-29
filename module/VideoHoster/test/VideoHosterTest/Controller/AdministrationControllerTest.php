@@ -147,6 +147,7 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         );
         $this->checkVideoTableHeader();
         $this->checkVideoTableContent($result);
+        $this->checkPaginationControls();
     }
 
     protected function checkVideoTableHeader()
@@ -187,6 +188,17 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
                 {$result->publishTime}"
             );
         }
+    }
+
+    /**
+     * At this stage it's just performing a minor test for the existence of the pagination controls
+     */
+    protected function checkPaginationControls()
+    {
+        $this->assertXpathQueryCount(
+            "//nav/ul[@class = 'pagination']", 1,
+            "Missing pagination controls"
+        );
     }
 
     public function testWillLoadMatchingVideoOnManageVideoPageWhenAvailable()
