@@ -2,7 +2,7 @@
 
 namespace VideoHoster\Models;
 
-class SeriesVideosModel
+class SeriesVideosModel extends AbstractModel
 {
     public $seriesId;
     public $videoId;
@@ -11,10 +11,5 @@ class SeriesVideosModel
     {
         $this->seriesId = (isset($data['seriesId'])) ? $data['seriesId'] : null;
         $this->videoId = (isset($data['videoId'])) ? $data['videoId'] : null;
-    }
-
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
     }
 } 

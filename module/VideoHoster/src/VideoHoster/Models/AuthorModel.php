@@ -2,7 +2,7 @@
 
 namespace VideoHoster\Models;
 
-class AuthorModel
+class AuthorModel extends AbstractModel
 {
     public $userId;
     public $username;
@@ -19,10 +19,5 @@ class AuthorModel
         $this->displayName = (isset($data['display_name'])) ? $data['display_name'] : null;
         $this->password = (isset($data['password'])) ? $data['password'] : null;
         $this->state = (isset($data['state'])) ? $data['state'] : null;
-    }
-
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
     }
 } 

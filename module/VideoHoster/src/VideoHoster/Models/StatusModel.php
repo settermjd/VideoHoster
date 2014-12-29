@@ -2,7 +2,7 @@
 
 namespace VideoHoster\Models;
 
-class StatusModel 
+class StatusModel extends AbstractModel
 {
     public $statusId;
     public $name;
@@ -11,10 +11,5 @@ class StatusModel
     {
         $this->statusId = (isset($data['statusId'])) ? $data['statusId'] : null;
         $this->name = (isset($data['name'])) ? $data['name'] : null;
-    }
-
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
     }
 } 

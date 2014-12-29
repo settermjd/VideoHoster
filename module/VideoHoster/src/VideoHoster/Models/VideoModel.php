@@ -2,7 +2,7 @@
 
 namespace VideoHoster\Models;
 
-class VideoModel 
+class VideoModel extends AbstractModel
 {
     public $videoId;
     public $name;
@@ -31,10 +31,5 @@ class VideoModel
         $this->publishDate = (isset($data['publishDate'])) ? $data['publishDate'] : null;
         $this->publishTime = (isset($data['publishTime'])) ? $data['publishTime'] : null;
         $this->levelId = (isset($data['levelId'])) ? $data['levelId'] : null;
-    }
-
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
     }
 } 

@@ -2,7 +2,7 @@
 
 namespace VideoHoster\Models;
 
-class LevelModel 
+class LevelModel extends AbstractModel
 {
     public $levelId;
     public $name;
@@ -11,10 +11,5 @@ class LevelModel
     {
         $this->levelId = (isset($data['levelId'])) ? $data['levelId'] : null;
         $this->name = (isset($data['name'])) ? $data['name'] : null;
-    }
-
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
     }
 } 
