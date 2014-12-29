@@ -101,6 +101,30 @@ class VideoTable
     }
 
     /**
+     * Return all videos in reverse order of published date
+     *
+     * This function was created to use in the video administration backend. There's no
+     * restrictions or filters on the videos returned, only an order clause so that the most
+     * recent are the easiest to access.
+     *
+     * @return bool|\Zend\Db\ResultSet\ResultSetInterface
+     */
+    public function fetchAllVideos()
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->order('publishDate DESC');
+
+        $results = $this->tableGateway->selectWith($select);
+
+        if (!$results->count() || is_null($results)) {
+            $results = new ResultSet();
+            $results->initialize(array());
+        }
+
+        return $results;
+    }
+
+    /**
      * Create a new or update an existing record
      *
      * @param VideoModel $video
