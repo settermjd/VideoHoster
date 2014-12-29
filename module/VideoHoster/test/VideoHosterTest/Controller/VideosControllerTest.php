@@ -2,6 +2,7 @@
 namespace VideoHosterTest\Controller;
 
 use VideoHoster\Models\VideoModel;
+use Zend\Db\Adapter\Driver\Sqlsrv\Result;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Zend\Http\Response;
