@@ -102,6 +102,7 @@ return array(
         'template_map' => array(
             'video-results' => __DIR__ . '/../view/video-hoster/videos/partials/video-results.phtml',
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+            'paginator/default' => __DIR__ . '/../view/video-hoster/pagination/default.phtml',
         )
     ),
 );

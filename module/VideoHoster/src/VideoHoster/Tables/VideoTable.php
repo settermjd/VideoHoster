@@ -121,6 +121,8 @@ class VideoTable
             $results->initialize(array());
         }
 
+        $results->buffer();
+
         return $results;
     }
 
