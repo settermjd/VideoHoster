@@ -2,7 +2,6 @@
 namespace VideoHosterTest\Controller;
 
 use VideoHoster\Models\VideoModel;
-use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Zend\Http\Response;
 use Faker;

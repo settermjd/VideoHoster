@@ -102,7 +102,7 @@ class AdministrationController extends AbstractActionController
     public function indexAction()
     {
         return array(
-            'videos' => $this->videoTable->fetchAllVideos()
+            'paginator' => $this->getPaginator($this->videoTable->fetchAllVideos())
         );
     }
 
