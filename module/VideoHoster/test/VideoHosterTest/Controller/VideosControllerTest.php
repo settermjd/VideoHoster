@@ -80,13 +80,26 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         );
     }
 
-    protected function checkPageHeader()
+    protected function checkPageLinks()
     {
         $this->assertXpathQueryCount('//a[@class="navbar-brand"][contains(text(), "ZFCasts")]', 1);
         $this->assertXpathQueryCount('//a[contains(text(), "FAQ")]', 1);
         $this->assertXpathQueryCount('//a[contains(text(), "Impressum")]', 1);
         $this->assertXpathQueryCount('//a[contains(text(), "Disclaimer")]', 1);
         $this->assertXpathQueryCount('//a[contains(text(), "Privacy")]', 1);
+        $this->assertXpathQueryCount('//a[@class="navbar-brand"][contains(text(), "ZFCasts")]', 1);
+        $this->assertXpathQueryCount(
+            '//li/a[@href="/user/register"][contains(text(), "Subscribe")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//li/a[@href="/videos/free"][contains(text(), "Free Screencasts")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//li/a[@href="/videos"][contains(text(), "All Screencasts")]', 1
+        );
+        $this->assertXpathQueryCount(
+            '//li/a[@href="/pages/faq"][contains(text(), "FAQ")]', 1
+        );
     }
 
     public function testCanDispatchToVideoIndexPageWithoutResults()
@@ -111,7 +124,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
             '//div[@class="col-lg-12"][starts-with(normalize-space(.), "Sorry, no tutorials are currently available")]/text()', 1
         );
         $this->assertXpathQueryCount('//h1[contains(text(), "All Tutorials")]', 1);
-        $this->checkPageHeader();
+        $this->checkPageLinks();
     }
 
     public function testCanDispatchToVideoIndexPageWithResults()
@@ -152,7 +165,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
 
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//h1[contains(text(), "All Tutorials")]', 1);
-        $this->checkPageHeader();
+        $this->checkPageLinks();
 
         foreach ($resultVideos as $result) {
             $this->assertXpathQueryCount("//h2[contains(text(), '{$result->name}')]", 1);
@@ -167,7 +180,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
     {
         $this->dispatch('/' . $validPages);
         $this->assertResponseStatusCode(404);
-        $this->checkPageHeader();
+        $this->checkPageLinks();
     }
 
     public function testCanDispatchToFreeVideoPages()
@@ -185,7 +198,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
 
         $this->dispatch('/videos/free');
         $this->assertResponseStatusCode(200);
-        $this->checkPageHeader();
+        $this->checkPageLinks();
     }
 
     public function validVideoPagesProvider()
@@ -231,7 +244,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
 
         $this->dispatch('/videos/' . $slug);
         $this->assertResponseStatusCode(200);
-        $this->checkPageHeader();
+        $this->checkPageLinks();
     }
 
     public function testRedirectToIndexPageIfVideoNotAvailableOnViewPage()
@@ -291,7 +304,7 @@ class VideosControllerTest extends AbstractHttpControllerTestCase
         $this->assertActionName('ViewVideo');
         $this->assertControllerClass('VideosController');
         $this->assertMatchedRouteName('videos/view-video');
-        $this->checkPageHeader();
+        $this->checkPageLinks();
     }
 
 }
