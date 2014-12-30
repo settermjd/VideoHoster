@@ -51,10 +51,12 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
+                <?php if (!$this->zfcUserIdentity()): ?>
                 <li><a
                         href="<?php echo $this->url('zfcuser/register') ?>"><?php echo $this->translate
                         ('Subscribe') ?></a>
                 </li>
+                <?php endif ?>
                 <li><a
                         href="<?php echo $this->url('videos/free') ?>"><?php echo $this->translate
                         ('Free Screencasts') ?></a>
