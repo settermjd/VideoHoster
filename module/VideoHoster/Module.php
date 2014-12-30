@@ -28,4 +28,48 @@ class Module
             )
         );
     }
+
+    public function onBootstrap($e)
+    {
+        $events = $e->getApplication()->getEventManager()->getSharedManager();
+        $events->attach('ZfcUser\Form\Register','init', function($e) {
+            $form = $e->getTarget();
+
+            $form->setAttribute('class', 'form-horizontal');
+
+            $elements = array(
+                'username', 'email', 'password', 'passwordVerify'
+            );
+            foreach($elements as $element) {
+                $form->get($element)->setLabelAttributes(
+                    array('class'  => 'col-sm-2 control-label')
+                );
+                $form->get($element)->setAttribute('class', 'form-control');
+            }
+
+            $form->get('submit')->setAttribute('class', 'btn btn-primary');
+            $form->get('submit')->setLabel('Subscribe');
+        });
+
+        $events->attach('ZfcUser\Form\Login','init', function($e) {
+            $form = $e->getTarget();
+
+            $form->setAttribute('class', 'form-horizontal');
+
+            $form->get('submit')->setAttribute('class', 'btn btn-primary');
+            $form->get('submit')->setLabel('Subscribe');
+
+            $elements = array(
+                'identity', 'credential'
+            );
+            foreach($elements as $element) {
+                $form->get($element)->setLabelAttributes(
+                    array('class'  => 'col-sm-2 control-label')
+                );
+                $form->get($element)->setAttribute('class', 'form-control');
+            }
+
+            // Do what you please with the form instance ($form)
+        });
+    }
 }
