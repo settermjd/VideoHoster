@@ -12,6 +12,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Adapter\Iterator;
 use Zend\Paginator\Paginator;
+use Zend\View\Model\ViewModel;
 
 class AdministrationController extends AbstractActionController
 {
@@ -104,6 +105,47 @@ class AdministrationController extends AbstractActionController
         return array(
             'paginator' => $this->getPaginator($this->videoTable->fetchAllVideos())
         );
+    }
+
+    public function deleteAction()
+    {
+        $formManager = $this->serviceLocator->get('FormElementManager');
+        $form = $formManager->get('VideoHoster\Form\DeleteVideoForm');
+
+        $view = new ViewModel();
+
+        if ($this->getRequest()->isGet()) {
+            $slug = trim($this->params()->fromRoute('slug'));
+            $this->flashMessenger()->addErrorMessage('Unable to continue, no video slug provided');
+            if (empty($slug)) {
+                return $this->redirect()->toRoute('administration', array());
+            }
+            if (($video = $this->videoTable->fetchBySlug($slug)) instanceof VideoModel) {
+                $form->setData($video->getArrayCopy());
+                $view->setVariable('video', $video);
+            } else {
+                return $this->redirect()->toRoute(
+                    'administration', array()
+                );
+            }
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                if ($this->videoTable->deleteBySlug($form->get('slug')->getValue())) {
+                    return $this->redirect()->toRoute(
+                        'administration', array()
+                    );
+                } else {
+                    $view->setVariable('deleteError', true);
+                }
+            }
+        }
+
+        $view->setVariable('form', $form);
+
+        return $view;
     }
 
     public function manageAction()

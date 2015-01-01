@@ -65,6 +65,46 @@ class VideoTableTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($record, $mockVideoTable->fetchBySlug($slug));
     }
 
+    public function testCanDeleteVideoBySlugSuccessfully()
+    {
+        $slug = 'test-video';
+
+        $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
+        $mockTableGateway->shouldReceive('delete')
+            ->times(1)
+            ->with(array(
+                'slug' => $slug
+            ))
+            ->andReturn(1);
+
+        $videoTable = new VideoTable($mockTableGateway);
+        $videoTable->deleteBySlug($slug);
+    }
+
+    /**
+     * @dataProvider invalidVideoIdProvider
+     * @expectedException Zend\Stdlib\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Cannot delete record without a valid video slug
+     */
+    public function testCannotDeleteVideoWithoutValidSlug($invalidSlug)
+    {
+        $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
+        $mockTableGateway->shouldReceive('delete')
+            ->times(0);
+
+        $videoTable = new VideoTable($mockTableGateway);
+        $videoTable->deleteBySlug($invalidSlug);
+    }
+
+    public function invalidVideoIdProvider()
+    {
+        return array(
+            array(-1),
+            array(""),
+            array(false),
+            array(TRUE)
+        );
+    }
 
     public function testFetchAllActiveVideosByReverseDateOrder()
     {

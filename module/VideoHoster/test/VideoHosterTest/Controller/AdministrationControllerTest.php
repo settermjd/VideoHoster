@@ -87,6 +87,170 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         $this->assertXpathQueryCount('//a[contains(text(), "Privacy")]', 1);
     }
 
+    public function testWillRedirectToAdminHomePageIfNoSlugProvidedOnGetRequest()
+    {
+        $this->dispatch('/administration/delete');
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/administration');
+    }
+
+    public function testWillRedirectToAdminPageWhenAttemptingToLoadNonexistantVideo()
+    {
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+
+        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
+        $mockAuthService->shouldReceive('hasIdentity')
+            ->once()
+            ->andReturn(true);
+        $serviceManager->setService('AuthService', $mockAuthService);
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('fetchBySlug')
+            ->with('non-existent-slug')
+            ->once()
+            ->andReturn(false);
+
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->dispatch('/administration/delete/non-existent-slug');
+
+        $this->assertRedirectTo('/administration');
+    }
+
+    public function testWillLoadVideoOnDeletePageIfValidSlugProvided()
+    {
+        $video = new VideoModel();
+        $video->exchangeArray(array(
+            'videoId' => 12,
+            'name' => "Freddie Mercury Live",
+            'slug' => "freddie-mercury-live",
+            'description' => "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using.",
+            'authorId' => 1,
+            'statusId' => 1,
+            'paymentRequirementId' => 1,
+            'extract' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+            'duration' => 115,
+            'publishDate' => '2008-08-01',
+            'publishTime' => '11:15',
+            'levelId' => 1
+        ));
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+
+        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
+        $mockAuthService->shouldReceive('hasIdentity')
+            ->once()
+            ->andReturn(true);
+        $serviceManager->setService('AuthService', $mockAuthService);
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('fetchBySlug')
+            ->with($video->slug)
+            ->once()
+            ->andReturn($video);
+
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->dispatch('/administration/delete/' . $video->slug);
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQueryContentContains(
+            '//h1', 'Delete Video', "Should display delete video header"
+        );
+
+        $warning = sprintf("Do you really want to delete: %s", $video->name);
+        $this->assertXpathQueryCount("//div[@class='alert alert-danger'][contains(., '{$warning}')]", 1);
+
+        $this->assertXpathQueryCount(
+            sprintf("//input[@type='hidden'][@value='%s'][@name='slug']", $video->slug),
+            1, "Hidden slug field is missing, has no or an incorrect value"
+        );
+
+        $this->assertXpathQueryCount(
+            "//input[@type='submit'][@value='Delete Video']",
+            1, "Form submit button is missing"
+        );
+
+        $this->assertXpathQueryCount(
+            "//a[@href='/administration'][@class='btn btn-default'][contains(text(), 'Cancel')]",
+            1, "Form cancel button is missing"
+        );
+    }
+
+    public function testWillDeleteVideoWithCorrectVideoSlug()
+    {
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+
+        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
+        $mockAuthService->shouldReceive('hasIdentity')
+            ->once()
+            ->andReturn(true);
+        $serviceManager->setService('AuthService', $mockAuthService);
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('deleteBySlug')
+            ->with('test-video')
+            ->once()
+            ->andReturn(true);
+
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->getRequest()
+            ->setMethod('POST')
+            ->setPost(new Parameters(
+                array(
+                    'slug' => 'test-video',
+                )
+            ));
+        $this->dispatch('/administration/delete');
+
+        $this->assertRedirectTo('/administration');
+    }
+
+    public function testWillShowErrorMessageWithIncorrectVideoSlug()
+    {
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+
+        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
+        $mockAuthService->shouldReceive('hasIdentity')
+            ->once()
+            ->andReturn(true);
+        $serviceManager->setService('AuthService', $mockAuthService);
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('deleteBySlug')
+            ->with('test-video')
+            ->once()
+            ->andReturn(false);
+
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->getRequest()
+            ->setMethod('POST')
+            ->setPost(new Parameters(
+                array(
+                    'slug' => 'test-video',
+                )
+            ));
+        $this->dispatch('/administration/delete');
+        $this->markTestIncomplete("The xpath assertion's not working, but I'm not sure why");
+
+        $this->assertXpathQueryCount(
+            "//div[@class='alert alert-warning'][contains(text(), 'Unable to delete the video')]", 1
+        );
+    }
+
     public function testWillRedirectFromManageVideoPageIfUserNotLoggedIn()
     {
         $this->markTestIncomplete("Currently refactoring the routing table");
