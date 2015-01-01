@@ -44,6 +44,18 @@ return array(
                             ),
                         ),
                     ),
+                    'delete' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/delete[/:slug]',
+                            'constraints' => array(
+                                'slug' => '[a-zA-Z][a-zA-Z-]*[a-zA-Z]'
+                            ),
+                            'defaults' => array(
+                                'action'     => 'delete',
+                            ),
+                        ),
+                    ),
                 )
             ),
             /**

@@ -1,0 +1,35 @@
+<h1>Delete Video</h1>
+
+<div class="container-fluid">
+
+    <?php
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('administration/delete'));
+    $form->setAttribute('class', 'form-horizontal');
+    $form->setAttribute('method', 'post');
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    ?>
+
+    <?php if ($this->deleteError): ?>
+    <div class="alert alert-warning" role="alert">Unable to delete the video</div>
+    <?php endif; ?>
+
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        Do you really want to delete: <em><?php print trim($this->video->name); ?></em>. This action is permanent and <strong>cannot be reversed</strong>!
+    </div>
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                <?php echo $this->formHidden($form->get('slug')); ?>&nbsp;
+                <?php echo $this->formSubmit($form->get('submit')); ?>
+                <a href="<?php print $this->url('administration'); ?>"
+                   class="btn btn-default">Cancel</a>
+            </div>
+        </div>
+
+<?php echo $this->form()->closeTag(); ?>
+
+</div>
