@@ -6,6 +6,7 @@ use VideoHoster\Models\VideoModel;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Stdlib\Exception\InvalidArgumentException;
+use Zend\Validator\Digits;
 
 class VideoTable
 {
@@ -36,6 +37,23 @@ class VideoTable
         }
 
         throw new InvalidArgumentException('invalid slug supplied');
+    }
+
+    /**
+     * Delete a video by its video id value
+     *
+     * @param int $videoId
+     * @return mixed
+     */
+    public function deleteById($videoId)
+    {
+        // Using the Digits validator (and filter) to provide concise check for a valid value
+        $validator = new Digits();
+        
+        if (!$validator->isValid($videoId)) {
+            throw new InvalidArgumentException("Cannot delete record without a valid video id");
+        }
+        return $this->tableGateway->delete(array('videoId' => (int)$videoId));
     }
 
     /**
