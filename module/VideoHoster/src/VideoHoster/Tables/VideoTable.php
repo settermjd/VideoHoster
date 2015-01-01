@@ -7,6 +7,7 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Stdlib\Exception\InvalidArgumentException;
 use Zend\Validator\Digits;
+use Zend\Validator\Regex;
 
 class VideoTable
 {
@@ -45,15 +46,15 @@ class VideoTable
      * @param int $videoId
      * @return mixed
      */
-    public function deleteById($videoId)
+    public function deleteBySlug($slug)
     {
         // Using the Digits validator (and filter) to provide concise check for a valid value
-        $validator = new Digits();
+        $validator = new Regex('/[a-zA-Z][a-zA-Z-]*[a-zA-Z]/');
         
-        if (!$validator->isValid($videoId)) {
-            throw new InvalidArgumentException("Cannot delete record without a valid video id");
+        if (!$validator->isValid($slug)) {
+            throw new InvalidArgumentException("Cannot delete record without a valid video slug");
         }
-        return $this->tableGateway->delete(array('videoId' => (int)$videoId));
+        return $this->tableGateway->delete(array('slug' => $slug));
     }
 
     /**

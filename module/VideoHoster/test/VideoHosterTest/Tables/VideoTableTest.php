@@ -65,35 +65,35 @@ class VideoTableTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($record, $mockVideoTable->fetchBySlug($slug));
     }
 
-    public function testCanDeleteVideoSuccessfully()
+    public function testCanDeleteVideoBySlugSuccessfully()
     {
-        $videoId = 5;
+        $slug = 'test-video';
 
         $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
         $mockTableGateway->shouldReceive('delete')
             ->times(1)
             ->with(array(
-                'videoId' => $videoId
+                'slug' => $slug
             ))
             ->andReturn(1);
 
         $videoTable = new VideoTable($mockTableGateway);
-        $videoTable->deleteById($videoId);
+        $videoTable->deleteBySlug($slug);
     }
 
     /**
      * @dataProvider invalidVideoIdProvider
      * @expectedException Zend\Stdlib\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Cannot delete record without a valid video id
+     * @expectedExceptionMessage Cannot delete record without a valid video slug
      */
-    public function testCannotDeleteVideoWithoutValidVideoId($invalidVideoId)
+    public function testCannotDeleteVideoWithoutValidSlug($invalidSlug)
     {
         $mockTableGateway = \Mockery::mock('Zend\Db\TableGateway\TableGateway');
         $mockTableGateway->shouldReceive('delete')
             ->times(0);
 
         $videoTable = new VideoTable($mockTableGateway);
-        $videoTable->deleteById($invalidVideoId);
+        $videoTable->deleteBySlug($invalidSlug);
     }
 
     public function invalidVideoIdProvider()
