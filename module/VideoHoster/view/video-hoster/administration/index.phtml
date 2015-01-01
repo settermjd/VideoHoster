@@ -10,6 +10,7 @@
                     <th>Running Time</th>
                     <th>Status</th>
                     <th>Published (Date / Time)</th>
+                    <th>Actions</th>
                 </tr>
                 <?php foreach ($this->paginator as $video): ?>
                     <tr>
@@ -26,6 +27,8 @@
                         <td><?php print $video->statusId; ?></td>
                         <td><?php print $video->publishDate; ?> / <?php print
                                 $video->publishTime; ?></td>
+                        <td><a href="<?php print $this->url('administration/delete', array('slug' =>
+                                trim($video->slug))); ?>">delete</a></td>
                     </tr>
                 <?php endforeach; ?>
             </table>

@@ -316,7 +316,7 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
     protected function checkVideoTableHeader()
     {
         $headers = array(
-            'Slug', 'Name', 'Running Time', 'Status', 'Published (Date / Time)'
+            'Slug', 'Name', 'Running Time', 'Status', 'Published (Date / Time)', 'Actions'
         );
 
         foreach ($headers as $header) {
@@ -349,6 +349,10 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
                 "//tr/td[contains(text(), '{$result->publishDate} / {$result->publishTime}')]", 1,
                 "Should have publish date/time result {$result->publishDate} /
                 {$result->publishTime}"
+            );
+            $this->assertXpathQueryCount(
+                "//a[@href='/administration/delete/{$result->slug}']", 1,
+                "Missing delete link for video with slug: {$result->slug}"
             );
         }
     }
