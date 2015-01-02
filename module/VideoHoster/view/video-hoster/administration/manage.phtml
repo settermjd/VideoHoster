@@ -162,10 +162,12 @@ echo $this->form()->openTag($form);
         <?php echo $this->formSubmit($form->get('submit')); ?>
         <a href="<?php print $this->url('administration/manage'); ?>" class="btn
         btn-default">Cancel</a>
+        <?php if ($form->get('videoId')->getValue() != ''): ?>
         <a href="<?php print $this->url('administration/delete',
             array('slug' => trim($form->get('slug')->getValue()))); ?>"
            class="btn
         btn-danger">Delete</a>
+        <?php endif; ?>
     </div>
 </div>
 
