@@ -3,6 +3,11 @@
 <div class="container-fluid">
 
 <?php
+    echo $this->flashMessenger()->render('success', array('alert', 'alert-success'));
+    echo $this->flashMessenger()->render('warning', array('alert', 'alert-warning'));
+?>
+
+<?php
 $form = $this->form;
 $form->setAttribute('action', $this->url('administration/manage'));
 $form->setAttribute('class', 'form-horizontal');

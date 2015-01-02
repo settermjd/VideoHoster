@@ -1,5 +1,9 @@
 <h1><?php print $this->translate('All Videos'); ?></h1>
 
+<?php
+echo $this->flashMessenger()->render('success', array('alert', 'alert-success'));
+?>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">

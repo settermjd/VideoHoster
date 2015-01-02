@@ -134,6 +134,7 @@ class AdministrationController extends AbstractActionController
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 if ($this->videoTable->deleteBySlug($form->get('slug')->getValue())) {
+                    $this->flashMessenger()->addSuccessMessage('Record Deleted Successfully');
                     return $this->redirect()->toRoute(
                         'administration', array()
                     );
@@ -161,6 +162,8 @@ class AdministrationController extends AbstractActionController
             $this->paymentRequirementTable->getSelectList()
         );
 
+        $view = new ViewModel();
+
         if ($this->getRequest()->isGet()) {
             if (!empty($slug)) {
                 // Grab the video and set it in the video model, if available
@@ -180,20 +183,25 @@ class AdministrationController extends AbstractActionController
             if ($form->isValid()) {
                 $video = new VideoModel();
                 $video->exchangeArray($form->getData());
-                $video->videoId = $this->videoTable->save($video);
+
+                if ($result = $this->videoTable->save($video)) {
+                    if ($video->videoId) {
+                        $this->flashMessenger()->addSuccessMessage('Record Updated Successfully');
+                    } else {
+                        $this->flashMessenger()->addSuccessMessage('Record Created Successfully');
+                    }
+                }
 
                 return $this->redirect()->toRoute(
                     'administration/manage',
-                    array(
-                        'slug' => trim($video->slug)
-                    )
+                    array('slug' => trim($video->slug))
                 );
             }
         }
 
-        return array(
-            'form' => $form,
-        );
+        $view->setVariable('form', $form);
+
+        return $view;
     }
 
     protected function getPaginator($resultset)
