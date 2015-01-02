@@ -150,12 +150,6 @@ class AdministrationController extends AbstractActionController
 
     public function manageAction()
     {
-        if (!$this->zfcUserAuthentication()->hasIdentity()) {
-            return $this->redirect()->toRoute(
-                'videos', array()
-            );
-        }
-
         // grab the slug from the route params
         $slug = $this->params()->fromRoute('slug');
         $formManager = $this->serviceLocator->get('FormElementManager');

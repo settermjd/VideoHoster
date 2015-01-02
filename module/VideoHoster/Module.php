@@ -32,9 +32,25 @@ class Module
     public function onBootstrap($e)
     {
         $events = $e->getApplication()->getEventManager()->getSharedManager();
+
+        $e->getApplication()->getEventManager()->attach('dispatch', function($e) {
+            if (fnmatch("*Administration", $e->getRouteMatch()->getParam('controller'))) {
+                $sm = $e->getApplication()->getServiceManager();
+                $auth = $sm->get('zfcuser_auth_service');
+                if (!($auth instanceof \Zend\Authentication\AuthenticationService) ||
+                    !$auth->hasIdentity())
+                {
+                    $url = $e->getRouter()->assemble(array(), array('name' => 'videos'));
+                    $response = $e->getResponse();
+                    $response->getHeaders()->addHeaderLine('Location', $url);
+                    $response->setStatusCode(302);
+                    $response->sendHeaders();
+                }
+            }
+        }, 100);
+
         $events->attach('ZfcUser\Form\Register','init', function($e) {
             $form = $e->getTarget();
-
             $form->setAttribute('class', 'form-horizontal');
 
             $elements = array(

@@ -1,11 +1,11 @@
 <?php
 namespace VideoHosterTest\Controller;
 
-use VideoHoster\Models\VideoModel;
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Zend\Http\Response;
 use Faker;
+use VideoHoster\Models\VideoModel;
+use Zend\Http\Response;
 use Zend\Stdlib\Parameters;
+use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 class AdministrationControllerTest extends AbstractHttpControllerTestCase
 {
@@ -87,11 +87,87 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         $this->assertXpathQueryCount('//a[contains(text(), "Privacy")]', 1);
     }
 
-    public function testWillRedirectToAdminHomePageIfNoSlugProvidedOnGetRequest()
+    protected function setupAuthentication($hasIdentity)
     {
-        $this->dispatch('/administration/delete');
-        $this->assertResponseStatusCode(302);
-        $this->assertRedirectTo('/administration');
+        $mockZfcAuthService = \Mockery::mock('ZfcUser\Entity\User');
+        $mockZfcAuthService->shouldReceive('getId')
+            ->once()
+            ->andReturn('1');
+
+        $mockUser = \Mockery::mock('ZfcUser\Controller\Plugin\ZfcUserAuthentication');
+        $mockUser->shouldReceive('getIdentity')
+            ->once()
+            ->andReturn($mockZfcAuthService);
+
+        $mockUser->shouldReceive('hasIdentity')
+            ->once()
+            ->andReturn($hasIdentity);
+
+        $mockController = \Mockery::mock('VideoHoster\Controller\AdministrationController');
+
+        $mockUser->shouldReceive('setController')
+            ->once();
+
+        $mockUser->shouldReceive('getController')
+            ->once()
+            ->andReturn($mockController);
+
+        return $mockUser;
+    }
+
+    protected function setupValidAuthServiceIdentity($serviceManager)
+    {
+        $mockZfcAuthService = \Mockery::mock('ZfcUser\Entity\User');
+        $mockZfcAuthService->shouldReceive('getId')
+            ->once()
+            ->andReturn('1');
+
+        $mockAuth = \Mockery::mock('\Zend\Authentication\AuthenticationService');
+        $mockAuth->shouldReceive('hasIdentity')
+            ->once()
+            ->andReturn(true);
+        $mockAuth->shouldReceive('getIdentity')
+            ->once()
+            ->andReturn($mockZfcAuthService);
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'zfcuser_auth_service', $mockAuth
+        );
+    }
+
+    /**
+     * @dataProvider adminControllerActionsList
+     */
+    public function testRedirectsToDefaultRouteWhenAccessingAdminActionsWithNoValidUser(
+        $route, $functionCall, $response
+    ) {
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive($functionCall)
+            ->once()
+            ->andReturn($response);
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->dispatch($route);
+        $this->assertResponseStatusCode(302, "Status code should have been a 302 redirect");
+        $this->assertRedirectTo('/videos', "Redirected to the wrong route");
+    }
+
+    public function adminControllerActionsList()
+    {
+        return array(
+            array('/administration', 'fetchAllVideos', array()),
+            array('/administration/delete', 'fetchBySlug', array()),
+            array('/administration/manage', 'fetchBySlug', array()),
+            array('/administration/delete/test-video', 'fetchBySlug', array()),
+            array('/administration/manage/test-video', 'fetchBySlug', array()),
+        );
     }
 
     public function testWillRedirectToAdminPageWhenAttemptingToLoadNonexistantVideo()
@@ -99,11 +175,7 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setAllowOverride(true);
 
-        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
-        $mockAuthService->shouldReceive('hasIdentity')
-            ->once()
-            ->andReturn(true);
-        $serviceManager->setService('AuthService', $mockAuthService);
+        $this->setupValidAuthServiceIdentity($serviceManager);
 
         $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
         $mockTable->shouldReceive('fetchBySlug')
@@ -141,11 +213,7 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setAllowOverride(true);
 
-        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
-        $mockAuthService->shouldReceive('hasIdentity')
-            ->once()
-            ->andReturn(true);
-        $serviceManager->setService('AuthService', $mockAuthService);
+        $this->setupValidAuthServiceIdentity($serviceManager);
 
         $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
         $mockTable->shouldReceive('fetchBySlug')
@@ -164,7 +232,8 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         );
 
         $warning = sprintf("Do you really want to delete: %s", $video->name);
-        $this->assertXpathQueryCount("//div[@class='alert alert-danger'][contains(., '{$warning}')]", 1);
+        $this->assertXpathQueryCount("//div[@class='alert alert-danger'][contains(., '{$warning}')]",
+            1);
 
         $this->assertXpathQueryCount(
             sprintf("//input[@type='hidden'][@value='%s'][@name='slug']", $video->slug),
@@ -187,11 +256,13 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setAllowOverride(true);
 
-        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
-        $mockAuthService->shouldReceive('hasIdentity')
-            ->once()
-            ->andReturn(true);
-        $serviceManager->setService('AuthService', $mockAuthService);
+        $this->setupValidAuthServiceIdentity($serviceManager);
+
+        /*$serviceManager->get('ControllerPluginManager')
+            ->setService(
+                'zfcUserAuthentication',
+                $this->setupAuthentication(true)
+            );*/
 
         $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
         $mockTable->shouldReceive('deleteBySlug')
@@ -253,7 +324,6 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
 
     public function testWillRedirectFromManageVideoPageIfUserNotLoggedIn()
     {
-        $this->markTestIncomplete("Currently refactoring the routing table");
         $this->dispatch('/administration/manage/test-video');
         $this->assertRedirectTo(
             '/videos',
@@ -296,11 +366,7 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
             'VideoHoster\Tables\VideoTable', $mockTable
         );
 
-        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
-        $mockAuthService->shouldReceive('hasIdentity')
-            ->once()
-            ->andReturn(true);
-        $serviceManager->setService('AuthService', $mockAuthService);
+        $this->setupValidAuthServiceIdentity($serviceManager);
 
         $this->dispatch('/administration');
 
@@ -316,7 +382,12 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
     protected function checkVideoTableHeader()
     {
         $headers = array(
-            'Slug', 'Name', 'Running Time', 'Status', 'Published (Date / Time)', 'Actions'
+            'Slug',
+            'Name',
+            'Running Time',
+            'Status',
+            'Published (Date / Time)',
+            'Actions'
         );
 
         foreach ($headers as $header) {
@@ -370,8 +441,6 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
 
     public function testWillLoadMatchingVideoOnManageVideoPageWhenAvailable()
     {
-        $this->markTestIncomplete("Need to do some research on testing for a logged in user");
-
         $video = new VideoModel();
         $video->exchangeArray(array(
             'videoId' => 12,
@@ -392,6 +461,7 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
         $mockTable->shouldReceive('fetchBySlug')
             ->once()
+            ->with($slug)
             ->andReturn($video);
 
         $serviceManager = $this->getApplicationServiceLocator();
@@ -400,12 +470,8 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
             'VideoHoster\Tables\VideoTable', $mockTable
         );
 
-        $mockAuthService = \Mockery::mock('Zend\Authentication\AuthenticationService');
-        $mockAuthService->shouldReceive('hasIdentity')
-            ->once()
-            ->andReturn(true);
-        $serviceManager->setService('AuthService', $mockAuthService);
-        
+        $this->setupValidAuthServiceIdentity($serviceManager);
+
         $this->dispatch('/administration/manage/freddie-mercury-live');
 
         $this->assertResponseStatusCode(200);
@@ -419,7 +485,8 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
             '//input[@type="text"][@name="slug"][contains(@value, "freddie-mercury-live")]', 1
         );
         $this->assertXpathQueryCount(
-            '//textarea[@name="description"][contains(text(), "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using.")]', 1
+            '//textarea[@name="description"][contains(text(), "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using.")]',
+            1
         );
         /*$this->assertXpathQueryCount(
             '//input[@type="select"][@name="authorId"][contains(@value, "1")]', 1
@@ -431,7 +498,8 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
             '//input[@type="select"][@name="paymentRequirementId"][contains(@value, "1")]', 1
         );*/
         $this->assertXpathQueryCount(
-            '//input[@type="text"][@name="extract"][contains(@value, "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.")]', 1
+            '//input[@type="text"][@name="extract"][contains(@value, "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.")]',
+            1
         );
         $this->assertXpathQueryCount(
             '//input[@type="text"][@name="duration"][contains(@value, "115")]', 1
@@ -453,28 +521,43 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
 
     public function testWillRedirectToManageRecordAfterSuccessfulUpdate()
     {
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+
+        $videoData = array(
+            'videoId' => 1,
+            'name' => 'test video',
+            'slug' => 'test-video',
+            'authorId' => 1,
+            'statusId' => 1,
+            'paymentRequirementId' => 1,
+            'description' => "here is a description",
+            'extract' => 'here is a',
+            'duration' => 131,
+            'publishDate' => '01-01-2015',
+            'publishTime' => '11:00',
+            'levelId' => 1
+        );
+
+        $video = new VideoModel();
+        $video->exchangeArray($videoData);
+
+        $mockTable = \Mockery::mock('VideoHoster\Tables\VideoTable');
+        $mockTable->shouldReceive('save')
+            ->once()
+            ->andReturn(1);
+        $serviceManager->setService(
+            'VideoHoster\Tables\VideoTable', $mockTable
+        );
+
+        $this->setupValidAuthServiceIdentity($serviceManager);
+
         $this->getRequest()
             ->setMethod('POST')
-            ->setPost(new Parameters(
-                array(
-                    'videoId' => 1,
-                    'name' => 'test video',
-                    'slug' => 'test-video',
-                    'authorId' => 1,
-                    'statusId' => 1,
-                    'paymentRequirementId' => 1,
-                    'description' => "here is a description",
-                    'extract' => 'here is a',
-                    'duration' => 131,
-                    'publishDate' => '2015-01-01',
-                    'publishTime' => '11:00',
-                    'levelId' => 1
-                )
-            ));
+            ->setPost(new Parameters($videoData));
+
         $this->dispatch('/administration/manage/test-video');
 
-        $this->markTestIncomplete("This test has not yet been fully implemented");
-
-        $this->assertRedirectTo('/videos/manage/test-video');
+        $this->assertRedirectTo('/administration/manage/test-video');
     }
 }
