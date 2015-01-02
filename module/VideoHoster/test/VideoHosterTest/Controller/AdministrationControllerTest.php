@@ -445,6 +445,10 @@ class AdministrationControllerTest extends AbstractHttpControllerTestCase
         /*$this->assertXpathQueryCount(
             '//input[@type="select"][@name="levelId"][contains(@value, "1")]', 1
         );*/
+        $this->assertXpathQueryCount(
+            "//a[@href='/administration/delete/freddie-mercury-live']", 1,
+            "Missing delete link for video with slug: freddie-mercury-live"
+        );
     }
 
     public function testWillRedirectToManageRecordAfterSuccessfulUpdate()
