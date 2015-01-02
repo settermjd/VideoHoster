@@ -17,7 +17,7 @@ class VideoInputFilter extends InputFilter
      * @var array
      */
     protected $_requiredFields = array(
-        "videoId", "authorId", "levelId", "statusId",
+        "authorId", "levelId", "statusId",
         "paymentRequirementId", "slug", "name", "description",
         "extract", "duration", "publishDate", "publishTime"
     );
@@ -28,7 +28,7 @@ class VideoInputFilter extends InputFilter
      * @var array
      */
     protected $_optionalFields = array(
-
+        "videoId"
     );
 
     /**
